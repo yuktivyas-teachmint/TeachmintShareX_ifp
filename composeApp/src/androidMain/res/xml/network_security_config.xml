@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!--
+        Cleartext is required ONLY for LAN discovery and local signaling (ws:// to IP addresses).
+        Android's domain-config cannot match IP addresses by CIDR, so base-config must allow
+        cleartext for the local WebSocket/RTSP/DIAL flows.
+
+        IMPORTANT: All internet-facing connections (remote signaling, analytics) MUST use
+        wss:// / https://. The androidApp manifest sets usesCleartextTraffic=false as an
+        additional safeguard — this config is the authoritative source.
+
+        Defense-in-depth: An OkHttp interceptor in AndroidBindings.createHttpClient() blocks
+        cleartext to non-RFC1918 addresses at the HTTP client level.
+    -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

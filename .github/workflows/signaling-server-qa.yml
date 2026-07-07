@@ -1,0 +1,102 @@
+name: "QA: Signaling Server Deploy"
+
+on:
+  workflow_dispatch:
+    
+permissions:
+  id-token: write
+  contents: read    
+
+env:
+  IMAGE_NAME: signaling-server
+  REGION: asia-south1
+  PROJECT_ID: teachmint-uat
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Google Authentication
+        id: auth
+        uses: Teachmint/hanuman/.github/actions/gcp-auth@main
+        with:
+          wif_pool: ${{ secrets.QA_WIF_POOL}}
+          service_account: ${{ secrets.QA_ARTIFACTORY_SERVICE_ACCOUNT }}
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Login to GAR
+        uses: docker/login-action@v3
+        with:
+          registry: asia-south1-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}  
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -f signaling-server/Dockerfile \
+            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:latest \
+            .
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Google Authentication
+        uses: Teachmint/hanuman/.github/actions/gcp-auth@main
+        with:
+          wif_pool: ${{ secrets.QA_WIF_POOL}}
+          service_account: ${{ secrets.QA_DEPLOYMENT_SERVICE_ACCOUNT }}
+          project_id: teachmint-uat          
+
+      - name: Deploy Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.IMAGE_NAME }}
+          region: asia-south1
+          project_id: ${{ env.PROJECT_ID }}
+          image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          flags: '--service-account=cloud-run@teachmint-uat.iam.gserviceaccount.com --allow-unauthenticated --session-affinity --network=uat-vpc --subnet=uat-network --no-cpu-throttling --vpc-egress=private-ranges-only --min-instances 1 --max-instances 1 --cpu 1 --memory 512Mi --timeout 3600 --port=8090 --startup-probe=httpGet.path=/health,timeoutSeconds=5,periodSeconds=5,failureThreshold=10 --liveness-probe=httpGet.path=/health,timeoutSeconds=5,periodSeconds=30,failureThreshold=3'
+          env_vars: |-            
+            SIGNALING_AUTH_TOKEN=${{ secrets.SIGNALING_AUTH_TOKEN }}
+            CORS_ALLOWED_ORIGINS=${{ secrets.SIGNALING_CORS_ORIGINS }}         
+
+      - name: Google Chat Notification
+        if: always()
+        uses: SimonScholz/google-chat-action@v1.1.0
+        with:
+          webhookUrl: ${{ secrets.GCHAT_NOTIFICATION }}
+          jobStatus: ${{ job.status }}
+          title: "Signaling Server Deploy (QA)"
+          subtitle: 'Triggered by: ${{ github.triggering_actor }}'
+          imageUrl: https://storage.googleapis.com/tm-assets/images/dark/teachmint-collapse-logo.svg
+          additionalSections: '[
+            {
+                "header": "Deployment Details",
+                "collapsible": false,
+                "widgets": [
+                    {
+                        "decoratedText": {
+                            "startIcon": {
+                                "knownIcon": "STAR"
+                            },
+                            "text": "<b>Build Run:</b> <a href=\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\">View Workflow Run</a>",
+                            "wrapText": true
+                        }
+                    }
+                ]
+            }
+          ]'

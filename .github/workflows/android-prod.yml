@@ -1,0 +1,115 @@
+name: "Production: Android Play Store Release" 
+
+on:
+  push:
+    branches:
+      - 'release-v*.*.*'
+jobs:
+  build:
+    name: Build Release AAB & Upload to Play Store
+    runs-on: [Android-test-runner]
+    env:
+      CI: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Create google-services.json
+        run: |
+          cat <<EOF > androidApp/google-services.json
+          ${{ secrets.GOOGLE_SERVICES_JSON_PROD }}
+          EOF
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: true
+
+      - name: Clear build caches (self-hosted runner)
+        run: |
+          rm -rf .gradle/build-cache .gradle/caches/build-cache-*
+          rm -rf composeApp/build androidApp/build
+          ./gradlew --stop 2>/dev/null || true
+
+      - name: Write secrets to local.properties (production)
+        run: |
+          cat >> local.properties <<EOF
+          signaling.auth.token=${{ secrets.SIGNALING_AUTH_TOKEN_PROD }}
+          signaling.server.url=${{ secrets.SIGNALING_SERVER_WSS_URL_PROD }}
+          turn.urls=${{ secrets.SHAREX_TURN_URLS_PROD }}
+          turn.username=${{ secrets.SHAREX_TURN_USERNAME_PROD }}
+          turn.credential=${{ secrets.SHAREX_TURN_CREDENTIAL_PROD }}
+          EOF
+
+      - name: Build Release AAB
+        run: ./gradlew clean :androidApp:bundleRelease --no-build-cache --no-daemon
+
+      - name: Get Build Tools Version
+        run: |
+          BUILD_TOOLS_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | sort -n | tail -1)
+          echo "BUILD_TOOLS=$BUILD_TOOLS_VERSION" >> $GITHUB_ENV
+          echo "Using Build Tools version: $BUILD_TOOLS_VERSION"
+
+      - name: Sign AAB
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
+        with:
+          releaseDirectory: androidApp/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          alias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOLS }}
+
+      - name: Upload to Google Play Store
+        uses: r0adkll/upload-google-play@v1.1.3
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          packageName: com.teachmint.shareX
+          releaseFiles: ${{ steps.sign_app.outputs.signedReleaseFile }}
+          track: internal
+          changesNotSentForReview: true
+
+      - name: Google Chat Notification Action
+        if: always()
+        uses: SimonScholz/google-chat-action@v1.1.0
+        with:
+          webhookUrl: ${{ secrets.GCHAT_NOTIFICATION }}
+          jobStatus: ${{ job.status }}
+          title: "Android Play Store Release (PRODUCTION)"
+          subtitle: 'Triggered by: ${{ github.triggering_actor }} on ${{ github.ref_name }}'
+          imageUrl: https://storage.googleapis.com/tm-assets/images/dark/teachmint-collapse-logo.svg
+          additionalSections: '[
+            {
+                "header": "Deployment Details",
+                "collapsible": false,
+                "widgets": [
+                    {
+                        "decoratedText": {
+                            "startIcon": {
+                                "knownIcon": "STAR"
+                            },
+                            "text": "<b>Package:</b> com.teachmint.shareX<br><b>Track:</b> internal<br><b>Branch:</b> ${{ github.ref_name }}<br><b>Run:</b> ${{ github.run_number }}",
+                            "wrapText": true
+                        }
+                    },
+                    {
+                        "decoratedText": {
+                            "startIcon": {
+                                "knownIcon": "STAR"
+                            },
+                            "text": "<b>Build Run:</b> <a href=\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\">View Workflow Run</a>",
+                            "wrapText": true
+                        }
+                    }
+                ]
+            }
+          ]'

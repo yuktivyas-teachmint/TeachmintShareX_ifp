@@ -1,0 +1,169 @@
+name: "QA: Web App Deploy"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read    
+
+env:
+  GCS_BUCKET: sharex-web-assets
+  PROJECT_ID: teachmint-uat
+  GRADLE_OPTS: >-
+    -Dorg.gradle.daemon=false
+    -Dorg.gradle.parallel=true
+    -Dorg.gradle.workers.max=4
+    -Dorg.gradle.caching=true
+    -Dkotlin.incremental=true
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: false
+
+      - name: Restore Kotlin/WASM build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            composeApp/build/compileSync
+            composeApp/build/kotlin-webpack
+          key: wasmjs-build-${{ hashFiles('composeApp/src/wasmJsMain/**', 'composeApp/src/commonMain/**', 'composeApp/build.gradle.kts') }}
+          restore-keys: |
+            wasmjs-build-
+
+      - name: Write secrets to local.properties
+        run: |
+          cat >> local.properties <<EOF
+          signaling.auth.token=${{ secrets.SIGNALING_AUTH_TOKEN }}
+          signaling.server.url=${{ secrets.SIGNALING_SERVER_WSS_URL }}
+          turn.urls=${{ secrets.SHAREX_TURN_URLS }}
+          turn.username=${{ secrets.SHAREX_TURN_USERNAME }}
+          turn.credential=${{ secrets.SHAREX_TURN_CREDENTIAL }}
+          EOF
+
+      - name: Build Web Application
+        run: ./gradlew :composeApp:wasmJsBrowserDistribution --no-daemon --build-cache
+
+      - name: Compress artifacts with gzip
+        run: |
+          cd composeApp/build/dist/wasmJs/productionExecutable
+          find . -type f \( -name "*.wasm" -o -name "*.js" -o -name "*.html" -o -name "*.css" \) \
+            -exec gzip -9 -k {} \;
+
+      - name: Google Authentication
+        uses: Teachmint/hanuman/.github/actions/gcp-auth@main
+        with:
+          wif_pool: ${{ secrets.QA_WIF_POOL }}
+          service_account: ${{ secrets.QA_BUCKET_SERVICE_ACCOUNT }}
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy to GCS bucket
+        run: |
+          DIST_DIR="composeApp/build/dist/wasmJs/productionExecutable"
+
+          # Upload pre-compressed .wasm.gz with correct headers
+          gsutil -m -h "Content-Encoding:gzip" -h "Content-Type:application/wasm" \
+            -h "Cache-Control:public, max-age=31536000, immutable" \
+            cp "${DIST_DIR}"/*.wasm.gz "gs://${GCS_BUCKET}/"
+
+          # Upload entry point JS with no-cache (fixed filename, not content-hashed)
+          gsutil -m -h "Content-Encoding:gzip" -h "Content-Type:application/javascript" \
+            -h "Cache-Control:no-cache" \
+            cp "${DIST_DIR}/composeApp.js.gz" "gs://${GCS_BUCKET}/"
+
+          # Upload hashed chunk JS files with long-lived immutable cache
+          find "${DIST_DIR}" -name "*.js.gz" ! -name "composeApp.js.gz" | while read f; do
+            gsutil -h "Content-Encoding:gzip" -h "Content-Type:application/javascript" \
+              -h "Cache-Control:public, max-age=31536000, immutable" \
+              cp "$f" "gs://${GCS_BUCKET}/$(basename "$f")"
+          done
+
+          # Upload pre-compressed .html.gz
+          gsutil -m -h "Content-Encoding:gzip" -h "Content-Type:text/html" \
+            -h "Cache-Control:no-cache" \
+            cp "${DIST_DIR}"/*.html.gz "gs://${GCS_BUCKET}/"
+
+          # Upload pre-compressed .css.gz (if any)
+          gsutil -m -h "Content-Encoding:gzip" -h "Content-Type:text/css" \
+            -h "Cache-Control:public, max-age=31536000, immutable" \
+            cp "${DIST_DIR}"/*.css.gz "gs://${GCS_BUCKET}/" 2>/dev/null || true
+
+          # Upload remaining files (images, fonts, etc.) without compression
+          gsutil -m -h "Cache-Control:public, max-age=86400" \
+            rsync -r -x '.*\.gz$' "${DIST_DIR}/" "gs://${GCS_BUCKET}/"
+
+      - name: Purge Cloudflare cache for entry files
+        run: |
+          curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CF_ZONE_ID }}/purge_cache" \
+            -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{
+              "files": [
+                "https://sharex.teachmint.qa/",
+                "https://sharex.teachmint.qa/index.html",
+                "https://sharex.teachmint.qa/composeApp.js"
+              ]
+            }' | tee /tmp/cf_purge_result.json
+          if ! grep -q '"success":true' /tmp/cf_purge_result.json; then
+            echo "WARNING: Cloudflare purge may have failed:"
+            cat /tmp/cf_purge_result.json
+          fi
+
+      - name: Google Chat Notification Action
+        if: always()
+        uses: SimonScholz/google-chat-action@v1.1.0
+        with:
+          webhookUrl: ${{ secrets.GCHAT_NOTIFICATION }}
+          jobStatus: ${{ job.status }}
+          title: "Web Build & Deploy (QA)"
+          subtitle: 'Triggered by: ${{ github.triggering_actor }}'
+          imageUrl: https://storage.googleapis.com/tm-assets/images/dark/teachmint-collapse-logo.svg
+          additionalSections: '[
+            {
+                "header": "Deployment Details",
+                "collapsible": false,
+                "widgets": [
+                    {
+                        "decoratedText": {
+                            "startIcon": {
+                                "knownIcon": "BOOKMARK"
+                            },
+                            "text": "<b>Live URL:</b> <a href=\"https://sharex.teachmint.qa\">https://sharex.teachmint.qa</a>",
+                            "wrapText": true
+                        }
+                    },
+                    {
+                        "decoratedText": {
+                            "startIcon": {
+                                "knownIcon": "STAR"
+                            },
+                            "text": "<b>Build Run:</b> <a href=\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\">View Workflow Run</a>",
+                            "wrapText": true
+                        }
+                    }
+                ]
+            }
+          ]'

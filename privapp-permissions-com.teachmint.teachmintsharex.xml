@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Privileged permissions for TeachmintShareX system app -->
+<permissions>
+    <privapp-permissions package="com.teachmint.teachmintsharex">
+        <!-- Required for detecting foreground apps -->
+        <permission name="android.permission.REAL_GET_TASKS"/>
+
+        <!-- Required for screen capture and media projection -->
+        <permission name="android.permission.CAPTURE_VIDEO_OUTPUT"/>
+        <permission name="android.permission.CAPTURE_AUDIO_OUTPUT"/>
+
+        <!-- Required for system overlay -->
+        <permission name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
+        <!-- Required for accessibility service (screenshot capture) -->
+        <permission name="android.permission.BIND_ACCESSIBILITY_SERVICE"/>
+
+        <!-- Required for camera access -->
+        <permission name="android.permission.CAMERA"/>
+
+        <!-- Required for audio recording -->
+        <permission name="android.permission.RECORD_AUDIO"/>
+
+        <!-- Required for network operations -->
+        <permission name="android.permission.INTERNET"/>
+        <permission name="android.permission.ACCESS_NETWORK_STATE"/>
+        <permission name="android.permission.ACCESS_WIFI_STATE"/>
+        <permission name="android.permission.CHANGE_WIFI_STATE"/>
+        <permission name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+        <permission name="android.permission.CHANGE_NETWORK_STATE"/>
+        <permission name="android.permission.CONFIGURE_WIFI_DISPLAY"/>
+        <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
+        <permission name="android.permission.START_ACTIVITIES_FROM_BACKGROUND"/>
+        <permission name="android.permission.NETWORK_SETTINGS"/>
+        <permission name="android.permission.NETWORK_STACK"/>
+        <permission name="android.permission.NEARBY_WIFI_DEVICES"/>
+        <permission name="android.permission.ACCESS_COARSE_LOCATION"/>
+        <permission name="android.permission.ACCESS_FINE_LOCATION"/>
+
+        <!-- Required for storage access -->
+        <permission name="android.permission.READ_EXTERNAL_STORAGE"/>
+        <permission name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+        <!-- Required for media access (Android 13+) -->
+        <permission name="android.permission.READ_MEDIA_IMAGES"/>
+        <permission name="android.permission.READ_MEDIA_VIDEO"/>
+        <permission name="android.permission.READ_MEDIA_AUDIO"/>
+
+        <!-- Required for foreground service -->
+        <permission name="android.permission.FOREGROUND_SERVICE"/>
+        <permission name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION"/>
+    </privapp-permissions>
+</permissions>
