@@ -1,0 +1,104 @@
+<resources>
+    <string name="app_name">Share X</string>
+    <string name="device_name">Nama Perangkat</string>
+    <string name="devices_connected">%1$d/%2$d Perangkat Terhubung</string>
+    <string name="open">Buka</string>
+    <string name="ready_to_receive">Siap menerima</string>
+    <string name="casting_instructions">Pindai kode QR atau masukkan PIN %1$s dari perangkat Anda untuk mulai menayangkan</string>
+    <string name="scan_the_qr_code">Pindai kode QR</string>
+    <string name="same_wifi_requirement">Kedua perangkat harus terhubung ke jaringan Wi-Fi yang sama</string>
+    <string name="enter_code_instruction">Atau masukkan PIN di bawah dari perangkat Anda untuk mulai menayangkan</string>
+    <string name="see_how_to_connect">Lihat cara menghubungkan?</string>
+    <string name="powered_by">Share X didukung oleh Teachmint</string>
+    <string name="network_info">%1$s | PIN: %2$s</string>
+    <string name="connected_to">Terhubung ke</string>
+    <string name="room_name">Room 204 Science Lab</string>
+    <string name="start_mirroring">Mulai Mirroring</string>
+    <string name="no_network_title">Tidak Ada Jaringan</string>
+    <string name="no_network_subtitle">Hubungkan ke jaringan</string>
+    <string name="network_error">Kesalahan Jaringan</string>
+    <string name="wifi_fallback_name">Jaringan</string>
+    <string name="cast_file">Tayangkan File</string>
+    <string name="cast_file_desc">PDF, PPT, Gambar</string>
+    <string name="send_file">Kirim File</string>
+    <string name="send_file_desc">Transfer file ke perangkat penerima</string>
+    <string name="annotate">Anotasi</string>
+    <string name="annotate_desc">Gambar di layar</string>
+    <string name="control">Kontrol</string>
+    <string name="control_desc">Akses perangkat dari jarak jauh</string>
+    <string name="disconnect">Putuskan</string>
+    <string name="wifi_name">ClassroomWiFi-5G</string>
+    <string name="remote_control_accessibility_description">Mengizinkan guru atau presenter jarak jauh melakukan gerakan (ketuk, gulir, geser) di perangkat ini selama sesi berbagi layar ShareX aktif. Hanya aktif selama sesi berlangsung. Tidak mengumpulkan, menyimpan, atau mengirimkan data pribadi.</string>
+    <string name="remote_control_accessibility_label">Kendali Jarak Jauh ShareX</string>
+
+    <!-- Settings screen -->
+    <string name="back">Kembali</string>
+    <string name="setting">Pengaturan</string>
+    <string name="unknown_device">Perangkat Tidak Dikenal</string>
+    <string name="multiple_device_cast">Tayangan Multi-Perangkat</string>
+    <string name="multiple_device_cast_desc">Izinkan beberapa perangkat terhubung</string>
+    <string name="direct_connection">Koneksi Langsung</string>
+    <string name="direct_connection_desc">Pengguna dapat terhubung tanpa persetujuan</string>
+    <string name="language">Bahasa</string>
+    <string name="app_version">Versi Aplikasi: %1$s (%2$d)</string>
+    <string name="sharex_exclusive">Share X, tersedia eksklusif di Teachmint X</string>
+    <string name="rename">Ganti Nama</string>
+    <string name="cancel">Batal</string>
+    <string name="update">Perbarui</string>
+    <string name="close">Tutup</string>
+
+    <!-- Language selection dialog -->
+    <string name="which_language_do_you_prefer">Bahasa mana yang Anda pilih?</string>
+    <string name="save">Simpan</string>
+
+    <!-- Host home screen -->
+    <string name="connected_device">Perangkat Terhubung</string>
+    <string name="no_device_connected">Belum ada perangkat yang terhubung.</string>
+    <string name="cast">Tayangkan</string>
+    <string name="reverse_cast">Tayangan Balik</string>
+    <string name="byom">BYOM</string>
+    <string name="remove">Hapus</string>
+    <string name="reconnecting">Menghubungkan ulang….</string>
+    <string name="waiting_for_device">Menunggu perangkat…</string>
+    <string name="scan_qr_or_visit">Pindai kode QR dengan kamera ponsel atau kunjungi :</string>
+    <string name="download_sharex_app">Unduh Aplikasi Share X sesuai jenis sistem Anda.</string>
+    <string name="connect_to_wifi_network">Hubungkan ke Jaringan Wi-Fi:</string>
+    <string name="open_sharex_app">Buka Aplikasi Share X di sistem Anda</string>
+    <string name="start_screen_sharing">Mulai berbagi layar</string>
+    <string name="mobile_pc">Ponsel/PC</string>
+    <string name="enter_pin_to_cast">Masukkan PIN di bawah untuk menayangkan</string>
+    <string name="browser">Browser</string>
+
+    <!-- Received files screen -->
+    <string name="received_files">File Diterima</string>
+    <plurals name="files_count">
+        <item quantity="other">%1$d file</item>
+    </plurals>
+    <string name="no_files_received">Belum ada file yang diterima</string>
+    <string name="files_appear_here">File yang dikirim dari perangkat terhubung akan muncul di sini</string>
+    <string name="no_files_found">File tidak ditemukan</string>
+    <string name="try_different_file_name">Coba nama file lain atau periksa ejaan Anda</string>
+
+    <!-- Popups and dialogs -->
+    <string name="device_requests">Permintaan Perangkat</string>
+    <string name="requesting">Meminta</string>
+    <string name="unavailable">Tidak Tersedia</string>
+    <string name="ok">OK</string>
+    <string name="allow_camera_mic_access">Izinkan Akses Kamera &amp; Mikrofon?</string>
+    <string name="byom_request_message">%1$s meminta akses ke kamera dan mikrofon papan ini untuk rapat video mereka.</string>
+    <string name="byom_request_details">Ini akan menstreamingkan kamera dan mikrofon papan ke perangkat mereka agar dapat digunakan di Zoom, Teams, atau Google Meet. Streaming hanya aktif selama sesi dan tidak direkam atau disimpan di papan ini.</string>
+    <string name="deny">Tolak</string>
+    <string name="allow">Izinkan</string>
+    <string name="no_receiver_found">Penerima tidak ditemukan</string>
+    <string name="no_receiver_found_desc">Ponsel harus terhubung ke jaringan yang sama dengan perangkat penerima.</string>
+    <string name="enable_remote_control">Aktifkan Kendali Jarak Jauh</string>
+    <string name="remote_control_consent_body1">ShareX menggunakan Layanan Aksesibilitas Android untuk memungkinkan guru atau presenter jarak jauh melakukan gerakan (ketuk, gulir, geser) di perangkat ini selama sesi berbagi layar ShareX aktif.</string>
+    <string name="remote_control_consent_body2">Layanan ini hanya aktif saat sesi kendali jarak jauh sedang berlangsung. Layanan ini tidak mengumpulkan, menyimpan, atau mengirimkan data pribadi apa pun dan tidak dapat digunakan di luar sesi aktif.\n\nAnda akan diarahkan ke Pengaturan Aksesibilitas untuk mengaktifkan izin ini.</string>
+    <string name="disagree">Tidak Setuju</string>
+    <string name="i_agree">Saya Setuju</string>
+    <string name="app_not_compatible">Sayangnya, aplikasi Share X tidak kompatibel dengan perangkat Anda.</string>
+    <string name="teachmint_owned_only">Aplikasi ini hanya dapat diakses di sistem milik Teachmint.</string>
+    <string name="airplay_starting">Memulai penerima AirPlay…</string>
+    <string name="airplay_stopped">Penerima AirPlay dihentikan</string>
+    <string name="no_supported_app_found">Tidak ada aplikasi yang didukung</string>
+</resources>

@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Privileged permissions for TeachmintShareX system app -->
+<!-- Privileged permissions for TeachmintShareX system app.
+     INSTALL_PACKAGES must be whitelisted here (and in the panel firmware) for silent
+     OTA self-update; otherwise PackageInstaller falls back to "pending user action". -->
 <permissions>
     <privapp-permissions package="com.teachmint.shareX">
         <!-- Required for privileged Wi-Fi Display sink configuration -->
         <permission name="android.permission.CONFIGURE_WIFI_DISPLAY"/>
+        <permission name="android.permission.INSTALL_PACKAGES"/>
+    </privapp-permissions>
+
+    <!-- IFP host app (androidApp module, release applicationId) -->
+    <privapp-permissions package="com.teachmint.shareX.ifp">
+        <permission name="android.permission.CONFIGURE_WIFI_DISPLAY"/>
+        <permission name="android.permission.INSTALL_PACKAGES"/>
+    </privapp-permissions>
+
+    <!-- IFP host app debug builds (applicationIdSuffix ".debug") -->
+    <privapp-permissions package="com.teachmint.shareX.ifp.debug">
+        <permission name="android.permission.CONFIGURE_WIFI_DISPLAY"/>
+        <permission name="android.permission.INSTALL_PACKAGES"/>
     </privapp-permissions>
 </permissions>

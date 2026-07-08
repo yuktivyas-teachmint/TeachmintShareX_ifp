@@ -16,8 +16,8 @@ if (file("google-services.json").exists()) {
 }
 
 val versionSchema = "release-v"
-val defaultVersionName = "1.0.0"
-val baseVersionCode = 1000
+val defaultVersionName = "1.0.5"
+val baseVersionCode = 1005
 
 val computedVersionName: String = if (System.getenv("CI") == "true") {
     runCatching {
@@ -57,7 +57,8 @@ android {
 
     defaultConfig {
         applicationId = "com.teachmint.shareX.ifp"
-        minSdk = libs.versions.android.minSdk.get().toInt()
+        // OTA library (com.teachmint.ota) AAR requires minSdk 29; IFP panels all run Android 10+.
+        minSdk = 29
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = computedVersionCode
         versionName = computedVersionName
@@ -67,6 +68,49 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
             excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
+        }
+    }
+
+    signingConfigs {
+        create("nonstarSigning") {
+            storeFile = file("platform_3576_14.jks")
+            storePassword = "ktc123123"
+            keyAlias = "skg"
+            keyPassword = "ktc123123"
+        }
+        create("starSigning") {
+            storeFile = file("teachmint1_platform.jks")
+            storePassword = "123456"
+            keyAlias = "teachmint"
+            keyPassword = "123456"
+        }
+        create("langoSigning") {
+            storeFile = file("teachmint1_platform.jks")
+            storePassword = "123456"
+            keyAlias = "teachmint"
+            keyPassword = "123456"
+        }
+        create("cvteSigning") {
+            storeFile = file("teachmint1_platform.jks")
+            storePassword = "123456"
+            keyAlias = "teachmint"
+            keyPassword = "123456"
+        }
+    }
+
+    flavorDimensions += "platform"
+    productFlavors {
+        create("star") {
+            dimension = "platform"
+        }
+        create("nonstar") {
+            dimension = "platform"
+        }
+        create("lango") {
+            dimension = "platform"
+        }
+        create("cvte") {
+            dimension = "platform"
         }
     }
 
@@ -96,27 +140,38 @@ android {
     }
 }
 
+// Capture signing configs reference (same pattern as chakra)
+val nonstarSigning = android.signingConfigs.getByName("nonstarSigning")
+val starSigning = android.signingConfigs.getByName("starSigning")
+val langoSigning = android.signingConfigs.getByName("langoSigning")
+val cvteSigning = android.signingConfigs.getByName("cvteSigning")
+
+// Apply each platform's signing key to its flavor (debug and release)
+androidComponents {
+    onVariants { variant ->
+        when (variant.flavorName) {
+            "nonstar" -> variant.signingConfig.setConfig(nonstarSigning)
+            "star" -> variant.signingConfig.setConfig(starSigning)
+            "lango" -> variant.signingConfig.setConfig(langoSigning)
+            "cvte" -> variant.signingConfig.setConfig(cvteSigning)
+        }
+    }
+}
+
 kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
+val otaVer = findProperty("otaVersion")?.toString() ?: "1.0.4-beta02"
+
 dependencies {
     implementation(project(":composeApp"))
     implementation(libs.androidx.activity.compose)
-
-    // composeApp's debug/release API classes are currently published as an
-    // android-classes-jar containing only R stubs. Add the generated full jar
-    // for Kotlin compile classpath so androidApp can resolve shared symbols.
-    debugCompileOnly(
-        files(
-            "${rootProject.projectDir}/composeApp/build/intermediates/full_jar/debug/createFullJarDebug/full.jar"
-        ).builtBy(":composeApp:createFullJarDebug")
-    )
-    releaseCompileOnly(
-        files(
-            "${rootProject.projectDir}/composeApp/build/intermediates/full_jar/release/createFullJarRelease/full.jar"
-        ).builtBy(":composeApp:createFullJarRelease")
-    )
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.service)
+    // Teachmint OTA update library (pulls in WorkManager, DataStore, OkHttp, Gson)
+    implementation("com.teachmint.ota:ota:$otaVer")
 }

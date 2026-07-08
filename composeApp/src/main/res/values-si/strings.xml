@@ -1,0 +1,105 @@
+<resources>
+    <string name="app_name">Share X</string>
+    <string name="device_name">උපාංග නාමය</string>
+    <string name="devices_connected">උපාංග %1$d/%2$d ක් සම්බන්ධයි</string>
+    <string name="open">විවෘත කරන්න</string>
+    <string name="ready_to_receive">ලැබීමට සූදානම්</string>
+    <string name="casting_instructions">කාස්ට් කිරීම ආරම්භ කිරීමට QR කේතය ස්කෑන් කරන්න හෝ ඔබේ උපාංගයෙන් පින් අංකය %1$s ඇතුළත් කරන්න</string>
+    <string name="scan_the_qr_code">QR කේතය ස්කෑන් කරන්න</string>
+    <string name="same_wifi_requirement">උපාංග දෙකම එකම Wi-Fi ජාලයට සම්බන්ධ විය යුතුය</string>
+    <string name="enter_code_instruction">නැතහොත් කාස්ට් කිරීම ආරම්භ කිරීමට ඔබේ උපාංගයෙන් පහත පින් අංකය ඇතුළත් කරන්න</string>
+    <string name="see_how_to_connect">සම්බන්ධ වන ආකාරය බලන්නද?</string>
+    <string name="powered_by">Share X බලගැන්වෙන්නේ Teachmint විසිනි</string>
+    <string name="network_info">%1$s | පින්: %2$s</string>
+    <string name="connected_to">සම්බන්ධ වී ඇත</string>
+    <string name="room_name">Room 204 Science Lab</string>
+    <string name="start_mirroring">තිර පිළිබිඹුව අරඹන්න</string>
+    <string name="no_network_title">ජාලයක් නැත</string>
+    <string name="no_network_subtitle">ජාලයකට සම්බන්ධ වන්න</string>
+    <string name="network_error">ජාල දෝෂයකි</string>
+    <string name="wifi_fallback_name">ජාලය</string>
+    <string name="cast_file">ගොනුව කාස්ට් කරන්න</string>
+    <string name="cast_file_desc">PDF, PPT, රූප</string>
+    <string name="send_file">ගොනුව යවන්න</string>
+    <string name="send_file_desc">ලබන උපාංගයට ගොනු මාරු කරන්න</string>
+    <string name="annotate">සටහන් අඳින්න</string>
+    <string name="annotate_desc">තිරය මත අඳින්න</string>
+    <string name="control">පාලනය</string>
+    <string name="control_desc">උපාංගයට දුරස්ථව ප්‍රවේශ වන්න</string>
+    <string name="disconnect">විසන්ධි කරන්න</string>
+    <string name="wifi_name">ClassroomWiFi-5G</string>
+    <string name="remote_control_accessibility_description">සක්‍රිය ShareX තිර බෙදාගැනීමේ සැසියක් අතරතුර දුරස්ථ ගුරුවරයෙකුට හෝ ඉදිරිපත් කරන්නෙකුට මෙම උපාංගය මත අභිනයන් (තට්ටු කිරීම, අනුචලනය, ස්වයිප් කිරීම) සිදු කිරීමට ඉඩ දෙයි. සජීවී සැසියක් අතරතුර පමණක් ක්‍රියාත්මක වේ. පුද්ගලික දත්ත රැස් නොකරයි, ගබඩා නොකරයි, හෝ සම්ප්‍රේෂණය නොකරයි.</string>
+    <string name="remote_control_accessibility_label">ShareX දුරස්ථ පාලනය</string>
+
+    <!-- Settings screen -->
+    <string name="back">ආපසු</string>
+    <string name="setting">සැකසුම්</string>
+    <string name="unknown_device">නොදන්නා උපාංගයකි</string>
+    <string name="multiple_device_cast">උපාංග කිහිපයකින් කාස්ට් කිරීම</string>
+    <string name="multiple_device_cast_desc">උපාංග කිහිපයකට සම්බන්ධ වීමට ඉඩ දෙන්න</string>
+    <string name="direct_connection">සෘජු සම්බන්ධතාව</string>
+    <string name="direct_connection_desc">පරිශීලකයන්ට කිසිදු අනුමැතියකින් තොරව සම්බන්ධ විය හැක</string>
+    <string name="language">භාෂාව</string>
+    <string name="app_version">යෙදුම් අනුවාදය: %1$s (%2$d)</string>
+    <string name="sharex_exclusive">Share X, ලබා ගත හැක්කේ Teachmint X මත පමණි</string>
+    <string name="rename">නම වෙනස් කරන්න</string>
+    <string name="cancel">අවලංගු කරන්න</string>
+    <string name="update">යාවත්කාලීන කරන්න</string>
+    <string name="close">වසන්න</string>
+
+    <!-- Language selection dialog -->
+    <string name="which_language_do_you_prefer">ඔබ කැමති කුමන භාෂාවටද?</string>
+    <string name="save">සුරකින්න</string>
+
+    <!-- Host home screen -->
+    <string name="connected_device">සම්බන්ධිත උපාංගය</string>
+    <string name="no_device_connected">තවම කිසිදු උපාංගයක් සම්බන්ධ වී නැත.</string>
+    <string name="cast">කාස්ට්</string>
+    <string name="reverse_cast">ප්‍රතිලෝම කාස්ට්</string>
+    <string name="byom">BYOM</string>
+    <string name="remove">ඉවත් කරන්න</string>
+    <string name="reconnecting">නැවත සම්බන්ධ වෙමින්….</string>
+    <string name="waiting_for_device">උපාංගය සඳහා රැඳී සිටිමින්…</string>
+    <string name="scan_qr_or_visit">ජංගම කැමරාවෙන් QR කේතය ස්කෑන් කරන්න හෝ පිවිසෙන්න:</string>
+    <string name="download_sharex_app">ඔබේ පද්ධති වර්ගය අනුව Share X යෙදුම බාගන්න.</string>
+    <string name="connect_to_wifi_network">Wi-Fi ජාලයට සම්බන්ධ වන්න:</string>
+    <string name="open_sharex_app">ඔබේ පද්ධතියේ Share X යෙදුම විවෘත කරන්න</string>
+    <string name="start_screen_sharing">තිර බෙදාගැනීම අරඹන්න</string>
+    <string name="mobile_pc">ජංගම/පරිගණකය</string>
+    <string name="enter_pin_to_cast">කාස්ට් කිරීමට පහත පින් අංකය ඇතුළත් කරන්න</string>
+    <string name="browser">බ්‍රවුසරය</string>
+
+    <!-- Received files screen -->
+    <string name="received_files">ලැබුණු ගොනු</string>
+    <plurals name="files_count">
+        <item quantity="one">ගොනු %1$d යි</item>
+        <item quantity="other">ගොනු %1$d යි</item>
+    </plurals>
+    <string name="no_files_received">තවම ගොනු කිසිවක් ලැබී නැත</string>
+    <string name="files_appear_here">සම්බන්ධිත උපාංගවලින් එවන ලද ගොනු මෙහි දිස්වනු ඇත</string>
+    <string name="no_files_found">ගොනු හමු නොවීය</string>
+    <string name="try_different_file_name">වෙනත් ගොනු නාමයක් උත්සාහ කරන්න හෝ අක්ෂර වින්‍යාසය පරීක්ෂා කරන්න</string>
+
+    <!-- Popups and dialogs -->
+    <string name="device_requests">උපාංග ඉල්ලීම්</string>
+    <string name="requesting">ඉල්ලමින්</string>
+    <string name="unavailable">ලබා ගත නොහැක</string>
+    <string name="ok">හරි</string>
+    <string name="allow_camera_mic_access">කැමරාව සහ මයික් වෙත ප්‍රවේශයට ඉඩ දෙනවාද?</string>
+    <string name="byom_request_message">%1$s ඔවුන්ගේ වීඩියෝ රැස්වීම සඳහා මෙම පුවරුවේ කැමරාවට සහ මයික්‍රෆෝනයට ප්‍රවේශය ඉල්ලා සිටී.</string>
+    <string name="byom_request_details">මෙමගින් පුවරුවේ කැමරාව සහ මයික්‍රෆෝනය ඔවුන්ගේ උපාංගයට ප්‍රවාහ කරන අතර, Zoom, Teams, හෝ Google Meet හි එය භාවිත කළ හැක. ප්‍රවාහය සැසිය අතරතුර පමණක් ක්‍රියාත්මක වන අතර මෙම පුවරුවේ පටිගත හෝ ගබඩා නොවේ.</string>
+    <string name="deny">ප්‍රතික්ෂේප කරන්න</string>
+    <string name="allow">ඉඩ දෙන්න</string>
+    <string name="no_receiver_found">ලබන්නෙකු හමු නොවීය</string>
+    <string name="no_receiver_found_desc">දුරකථනය ලබන උපාංගය සම්බන්ධ වී ඇති ජාලයටම සම්බන්ධ විය යුතුය.</string>
+    <string name="enable_remote_control">දුරස්ථ පාලනය සක්‍රිය කරන්න</string>
+    <string name="remote_control_consent_body1">සක්‍රිය ShareX තිර බෙදාගැනීමේ සැසියක් අතරතුර දුරස්ථ ගුරුවරයෙකුට හෝ ඉදිරිපත් කරන්නෙකුට මෙම උපාංගය මත අභිනයන් (තට්ටු කිරීම, අනුචලනය, ස්වයිප් කිරීම) සිදු කිරීමට ඉඩ දීම සඳහා ShareX Android හි ප්‍රවේශ්‍යතා සේවාව භාවිත කරයි.</string>
+    <string name="remote_control_consent_body2">මෙම සේවාව ක්‍රියාත්මක වන්නේ දුරස්ථ පාලන සැසියක් සිදුවෙමින් පවතින අතරතුර පමණි. එය කිසිදු පුද්ගලික දත්තයක් රැස් නොකරයි, ගබඩා නොකරයි, හෝ සම්ප්‍රේෂණය නොකරයි, සහ සක්‍රිය සැසියකින් පිටත භාවිත කළ නොහැක.\n\nමෙම අවසරය සක්‍රිය කිරීමට ඔබව ප්‍රවේශ්‍යතා සැකසුම් වෙත යොමු කෙරෙනු ඇත.</string>
+    <string name="disagree">එකඟ නොවෙමි</string>
+    <string name="i_agree">එකඟ වෙමි</string>
+    <string name="app_not_compatible">අවාසනාවකට, Share X යෙදුම ඔබේ උපාංගය සමඟ නොගැළපේ.</string>
+    <string name="teachmint_owned_only">මෙම යෙදුමට ප්‍රවේශ විය හැක්කේ Teachmint සතු පද්ධතිවල පමණි.</string>
+    <string name="airplay_starting">AirPlay ලබන්නා ආරම්භ වෙමින්…</string>
+    <string name="airplay_stopped">AirPlay ලබන්නා නතර විය</string>
+    <string name="no_supported_app_found">සහාය දක්වන යෙදුමක් හමු නොවීය</string>
+</resources>

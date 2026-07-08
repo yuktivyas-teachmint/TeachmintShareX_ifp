@@ -1,0 +1,29 @@
+<!-- Debug-only launcher icon: red/orange gradient (overrides the blue main icon)
+     so debug installs are visually distinguishable from release. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="36"
+    android:viewportHeight="36">
+  <path
+      android:pathData="M0,4C0,1.791 1.791,0 4,0H32C34.209,0 36,1.791 36,4V32C36,34.209 34.209,36 32,36H4C1.791,36 0,34.209 0,32V4Z">
+    <aapt:attr name="android:fillColor">
+      <gradient
+          android:startX="18"
+          android:startY="0"
+          android:endX="18"
+          android:endY="36"
+          android:type="linear">
+        <item android:offset="0" android:color="#FFFFA26C"/>
+        <item android:offset="0.86" android:color="#FFE8491F"/>
+      </gradient>
+    </aapt:attr>
+  </path>
+  <path
+      android:pathData="M29,17.01L24,17C23.45,17 23,17.45 23,18V27C23,27.55 23.45,28 24,28H29C29.55,28 30,27.55 30,27V18C30,17.45 29.55,17.01 29,17.01ZM29,26H24V19H29V26ZM26,8H8C6.89,8 6,8.89 6,10V22C6,23.1 6.89,24 8,24H15V26H13V28H21V26H19V24H21V22H8V10H26V15H28V10C28,8.89 27.1,8 26,8Z"
+      android:fillColor="#ffffff"/>
+  <path
+      android:pathData="M26.833,21.8V21L28,22.4L26.833,23.8V22.98C26,22.98 25.417,23.3 25,24C25.167,23 25.667,22 26.833,21.8Z"
+      android:fillColor="#ffffff"/>
+</vector>

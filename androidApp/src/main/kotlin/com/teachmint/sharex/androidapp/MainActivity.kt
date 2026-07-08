@@ -1,6 +1,7 @@
 package com.teachmint.sharex.androidapp
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
@@ -8,25 +9,40 @@ import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.teachmintsharex.share.miracast.MiracastPlaybackManager
 import com.teachmint.sharex.App
+import com.teachmint.sharex.androidapp.ota.OtaUpdateManager
+import com.teachmint.sharex.androidapp.ota.OtaUpdateOverlay
 import com.teachmint.sharex.share.shared.AndroidContextHolder
 import com.teachmint.sharex.share.shared.AndroidRoleHolder
 import com.teachmint.sharex.share.shared.DeviceRole
 import com.teachmint.sharex.share.shared.MiracastAdvertiserService
 import com.teachmint.sharex.crashlytics.CrashlyticsLogger
+import com.teachmint.sharex.language.LocaleManager
 import com.teachmint.sharex.share.shared.detectIfpDevice
 import com.teachmint.sharex.share.shared.getDeviceRole
 import com.teachmint.sharex.share.shared.notifyHostScreenCaptureDetected
 import com.teachmint.sharex.share.shared.updateMultiWindowModeState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private var shouldHideBottomBar: Boolean = false
     private var screenCaptureCallback: android.app.Activity.ScreenCaptureCallback? = null
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleManager.wrap(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -47,9 +63,14 @@ class MainActivity : ComponentActivity() {
         }
         registerScreenCaptureCallbackIfSupported()
         applyFullscreenMode()
+        startOtaUpdatePolling()
 
         setContent {
-            App()
+            Box(modifier = Modifier.fillMaxSize()) {
+                App()
+                // OTA update prompt drawn above all app content; kept out of shared code.
+                OtaUpdateOverlay()
+            }
         }
     }
 
@@ -107,6 +128,23 @@ class MainActivity : ComponentActivity() {
                 context = this,
                 reason = "startup_permissions_updated",
             )
+        }
+    }
+
+    /**
+     * Checks the Firebase remote-config `ota_update` key when the app opens and
+     * then every 15 minutes while the app stays in the foreground. The loop is
+     * cancelled automatically when the activity leaves STARTED and restarts
+     * (with an immediate check) when it comes back.
+     */
+    private fun startOtaUpdatePolling() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (true) {
+                    OtaUpdateManager.checkForUpdate(this@MainActivity)
+                    delay(OtaUpdateManager.FOREGROUND_POLL_INTERVAL_MS)
+                }
+            }
         }
     }
 

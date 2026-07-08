@@ -1,0 +1,114 @@
+<resources>
+    <string name="app_name">Share X</string>
+    <string name="device_name">Device Name</string>
+    <string name="devices_connected">%1$d/%2$d Device Connected</string>
+    <string name="open">Open</string>
+    <string name="ready_to_receive">Ready to receive</string>
+    <string name="casting_instructions">Scan the QR code or enter pin %1$s from your device to start casting</string>
+    <string name="scan_the_qr_code">Scan the QR code</string>
+    <string name="same_wifi_requirement">Both devices must be connected to the same Wi-Fi network</string>
+    <string name="enter_code_instruction">Or enter below pin from your device to start casting</string>
+    <string name="see_how_to_connect">See how to connect?</string>
+    <string name="powered_by">Share X is powered by Teachmint</string>
+    <string name="network_info">%1$s | Pin: %2$s</string>
+    <string name="connected_to">Connected to</string>
+    <string name="room_name">Room 204 Science Lab</string>
+    <string name="start_mirroring">Start Mirroring</string>
+    <string name="no_network_title">No Network</string>
+    <string name="no_network_subtitle">Connect to a network</string>
+    <string name="network_error">Network Error</string>
+    <string name="wifi_fallback_name">Network</string>
+    <string name="cast_file">Cast File</string>
+    <string name="cast_file_desc">PDF, PPT, Image</string>
+    <string name="send_file">Send File</string>
+    <string name="send_file_desc">Transfer files to receiver device</string>
+    <string name="annotate">Annotate</string>
+    <string name="annotate_desc">Draw on screen</string>
+    <string name="control">Control</string>
+    <string name="control_desc">Access the device remotely</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="wifi_name">ClassroomWiFi-5G</string>
+    <string name="remote_control_accessibility_description">Allows a remote teacher or presenter to perform gestures (tap, scroll, swipe) on this device during an active ShareX screen-sharing session. Only active during a live session. Does not collect, store, or transmit personal data.</string>
+    <string name="remote_control_accessibility_label">ShareX Remote Control</string>
+
+    <!-- Settings screen -->
+    <string name="back">Back</string>
+    <string name="setting">Setting</string>
+    <string name="unknown_device">Unknown Device</string>
+    <string name="multiple_device_cast">Multiple Device Cast</string>
+    <string name="multiple_device_cast_desc">Allow multiple devices to connect</string>
+    <string name="direct_connection">Direct Connection</string>
+    <string name="direct_connection_desc">Users can connect without any approval</string>
+    <string name="language">Language</string>
+    <string name="app_version">App Version: %1$s (%2$d)</string>
+    <string name="app_update_available">New version v%1$s available</string>
+    <string name="app_update_desc">Update the app to get the latest features and fixes</string>
+    <string name="app_update_downloading">Downloading update… %1$d%%</string>
+    <string name="app_update_verifying">Verifying update…</string>
+    <string name="app_update_installing">Installing…</string>
+    <string name="app_update_failed_desc">Automatic update failed. Tap Retry to try again.</string>
+    <string name="retry">Retry</string>
+    <string name="sharex_exclusive">Share X, exclusively available on Teachmint X</string>
+    <string name="rename">Rename</string>
+    <string name="cancel">Cancel</string>
+    <string name="update">Update</string>
+    <string name="close">Close</string>
+
+    <!-- Language selection dialog -->
+    <string name="which_language_do_you_prefer">Which language do you prefer?</string>
+    <string name="save">Save</string>
+
+    <!-- Host home screen -->
+    <string name="connected_device">Connected Device</string>
+    <string name="no_device_connected">No device connected yet.</string>
+    <string name="cast">Cast</string>
+    <string name="reverse_cast">Reverse Cast</string>
+    <string name="byom">BYOM</string>
+    <string name="remove">Remove</string>
+    <string name="reconnecting">Reconnecting….</string>
+    <string name="waiting_for_device">Waiting for device…</string>
+    <string name="scan_qr_or_visit">Scan QR code with mobile camera or visit :</string>
+    <string name="sharex_apps_url" translatable="false">https://www.teachmint.com/apps/sharex</string>
+    <string name="sharex_web_url" translatable="false">https://sharex.teachmint.com/</string>
+    <string name="download_sharex_app">Download Share X App based on your system type.</string>
+    <string name="connect_to_wifi_network">Connect to Wifi Network:</string>
+    <string name="open_sharex_app">Open the Share X App on your system</string>
+    <string name="start_screen_sharing">Start screen sharing</string>
+    <string name="mobile_pc">Mobile/PC</string>
+    <string name="enter_pin_to_cast">Enter the Pin below to cast</string>
+    <string name="browser">Browser</string>
+
+    <!-- Received files screen -->
+    <string name="received_files">Received Files</string>
+    <plurals name="files_count">
+        <item quantity="one">%1$d file</item>
+        <item quantity="other">%1$d files</item>
+    </plurals>
+    <string name="no_files_received">No files received yet</string>
+    <string name="files_appear_here">Files sent from connected devices will appear here</string>
+    <string name="no_files_found">No files found</string>
+    <string name="try_different_file_name">Try a different file name or check your spelling</string>
+
+    <!-- Popups and dialogs -->
+    <string name="device_requests">Device Requests</string>
+    <string name="requesting">Requesting</string>
+    <string name="unavailable">Unavailable</string>
+    <string name="ok">OK</string>
+    <string name="allow_camera_mic_access">Allow Camera &amp; Mic Access?</string>
+    <string name="byom_request_message">%1$s is requesting access to this board\'s camera and microphone for their video meeting.</string>
+    <string name="byom_request_details">This will stream the board\'s camera and microphone to their device so they can use it in Zoom, Teams, or Google Meet. The stream is only active during the session and is not recorded or stored on this board.</string>
+    <string name="deny">Deny</string>
+    <string name="allow">Allow</string>
+    <string name="no_receiver_found">No receiver found</string>
+    <string name="no_receiver_found_desc">The phone needs to be connected to the same network as the receiving end.</string>
+    <string name="enable_remote_control">Enable Remote Control</string>
+    <string name="remote_control_consent_body1">ShareX uses Android\'s Accessibility Service to allow a remote teacher or presenter to perform gestures (tap, scroll, swipe) on this device during an active ShareX screen-sharing session.</string>
+    <string name="remote_control_consent_body2">This service is only active while a remote control session is in progress. It does not collect, store, or transmit any personal data and cannot be used outside of an active session.\n\nYou will be redirected to Accessibility Settings to enable this permission.</string>
+    <string name="disagree">Disagree</string>
+    <string name="i_agree">I Agree</string>
+    <string name="app_not_compatible">Unfortunately, the Share X app isn\'t compatible with your device.</string>
+    <string name="teachmint_owned_only">This app is accessible only on Teachmint-owned systems.</string>
+    <string name="no_supported_app_found">No supported app found</string>
+    <string name="airplay_starting">Starting AirPlay receiver…</string>
+    <string name="airplay_stopped">AirPlay receiver stopped</string>
+</resources>

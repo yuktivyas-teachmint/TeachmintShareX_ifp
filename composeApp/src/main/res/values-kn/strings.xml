@@ -1,0 +1,105 @@
+<resources>
+    <string name="app_name">Share X</string>
+    <string name="device_name">ಸಾಧನದ ಹೆಸರು</string>
+    <string name="devices_connected">%1$d/%2$d ಸಾಧನ ಸಂಪರ್ಕಗೊಂಡಿದೆ</string>
+    <string name="open">ತೆರೆಯಿರಿ</string>
+    <string name="ready_to_receive">ಸ್ವೀಕರಿಸಲು ಸಿದ್ಧ</string>
+    <string name="casting_instructions">ಕಾಸ್ಟಿಂಗ್ ಪ್ರಾರಂಭಿಸಲು QR ಕೋಡ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ ಅಥವಾ ನಿಮ್ಮ ಸಾಧನದಿಂದ ಪಿನ್ %1$s ನಮೂದಿಸಿ</string>
+    <string name="scan_the_qr_code">QR ಕೋಡ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ</string>
+    <string name="same_wifi_requirement">ಎರಡೂ ಸಾಧನಗಳು ಒಂದೇ Wi-Fi ನೆಟ್‌ವರ್ಕ್‌ಗೆ ಸಂಪರ್ಕಗೊಂಡಿರಬೇಕು</string>
+    <string name="enter_code_instruction">ಅಥವಾ ಕಾಸ್ಟಿಂಗ್ ಪ್ರಾರಂಭಿಸಲು ನಿಮ್ಮ ಸಾಧನದಿಂದ ಕೆಳಗಿನ ಪಿನ್ ನಮೂದಿಸಿ</string>
+    <string name="see_how_to_connect">ಸಂಪರ್ಕಿಸುವುದು ಹೇಗೆ ಎಂದು ನೋಡುವಿರಾ?</string>
+    <string name="powered_by">Share X ಅನ್ನು Teachmint ನಡೆಸುತ್ತದೆ</string>
+    <string name="network_info">%1$s | ಪಿನ್: %2$s</string>
+    <string name="connected_to">ಸಂಪರ್ಕಗೊಂಡಿದೆ</string>
+    <string name="room_name">Room 204 Science Lab</string>
+    <string name="start_mirroring">ಮಿರರಿಂಗ್ ಪ್ರಾರಂಭಿಸಿ</string>
+    <string name="no_network_title">ನೆಟ್‌ವರ್ಕ್ ಇಲ್ಲ</string>
+    <string name="no_network_subtitle">ನೆಟ್‌ವರ್ಕ್‌ಗೆ ಸಂಪರ್ಕಿಸಿ</string>
+    <string name="network_error">ನೆಟ್‌ವರ್ಕ್ ದೋಷ</string>
+    <string name="wifi_fallback_name">ನೆಟ್‌ವರ್ಕ್</string>
+    <string name="cast_file">ಫೈಲ್ ಕಾಸ್ಟ್ ಮಾಡಿ</string>
+    <string name="cast_file_desc">PDF, PPT, ಚಿತ್ರ</string>
+    <string name="send_file">ಫೈಲ್ ಕಳುಹಿಸಿ</string>
+    <string name="send_file_desc">ರಿಸೀವರ್ ಸಾಧನಕ್ಕೆ ಫೈಲ್‌ಗಳನ್ನು ವರ್ಗಾಯಿಸಿ</string>
+    <string name="annotate">ಅನೋಟೇಟ್</string>
+    <string name="annotate_desc">ಪರದೆಯ ಮೇಲೆ ಬರೆಯಿರಿ</string>
+    <string name="control">ನಿಯಂತ್ರಣ</string>
+    <string name="control_desc">ಸಾಧನವನ್ನು ರಿಮೋಟ್ ಆಗಿ ಪ್ರವೇಶಿಸಿ</string>
+    <string name="disconnect">ಸಂಪರ್ಕ ಕಡಿತಗೊಳಿಸಿ</string>
+    <string name="wifi_name">ClassroomWiFi-5G</string>
+    <string name="remote_control_accessibility_description">ಸಕ್ರಿಯ ShareX ಸ್ಕ್ರೀನ್-ಶೇರಿಂಗ್ ಸೆಷನ್ ಸಮಯದಲ್ಲಿ ದೂರದಲ್ಲಿರುವ ಶಿಕ್ಷಕ ಅಥವಾ ಪ್ರೆಸೆಂಟರ್ ಈ ಸಾಧನದ ಮೇಲೆ ಗೆಸ್ಚರ್‌ಗಳನ್ನು (ಟ್ಯಾಪ್, ಸ್ಕ್ರಾಲ್, ಸ್ವೈಪ್) ಮಾಡಲು ಅನುಮತಿಸುತ್ತದೆ. ಲೈವ್ ಸೆಷನ್ ಸಮಯದಲ್ಲಿ ಮಾತ್ರ ಸಕ್ರಿಯ. ಯಾವುದೇ ವೈಯಕ್ತಿಕ ಡೇಟಾವನ್ನು ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ, ಶೇಖರಿಸುವುದಿಲ್ಲ ಅಥವಾ ರವಾನಿಸುವುದಿಲ್ಲ.</string>
+    <string name="remote_control_accessibility_label">ShareX ರಿಮೋಟ್ ಕಂಟ್ರೋಲ್</string>
+
+    <!-- Settings screen -->
+    <string name="back">ಹಿಂದೆ</string>
+    <string name="setting">ಸೆಟ್ಟಿಂಗ್</string>
+    <string name="unknown_device">ಅಪರಿಚಿತ ಸಾಧನ</string>
+    <string name="multiple_device_cast">ಬಹು ಸಾಧನ ಕಾಸ್ಟ್</string>
+    <string name="multiple_device_cast_desc">ಬಹು ಸಾಧನಗಳಿಗೆ ಸಂಪರ್ಕಿಸಲು ಅನುಮತಿಸಿ</string>
+    <string name="direct_connection">ನೇರ ಸಂಪರ್ಕ</string>
+    <string name="direct_connection_desc">ಬಳಕೆದಾರರು ಯಾವುದೇ ಅನುಮೋದನೆ ಇಲ್ಲದೆ ಸಂಪರ್ಕಿಸಬಹುದು</string>
+    <string name="language">ಭಾಷೆ</string>
+    <string name="app_version">ಆ್ಯಪ್ ಆವೃತ್ತಿ: %1$s (%2$d)</string>
+    <string name="sharex_exclusive">Share X, Teachmint X ನಲ್ಲಿ ಮಾತ್ರ ಲಭ್ಯ</string>
+    <string name="rename">ಹೆಸರು ಬದಲಾಯಿಸಿ</string>
+    <string name="cancel">ರದ್ದುಮಾಡಿ</string>
+    <string name="update">ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>
+    <string name="close">ಮುಚ್ಚಿ</string>
+
+    <!-- Language selection dialog -->
+    <string name="which_language_do_you_prefer">ನೀವು ಯಾವ ಭಾಷೆಯನ್ನು ಇಷ್ಟಪಡುತ್ತೀರಿ?</string>
+    <string name="save">ಉಳಿಸಿ</string>
+
+    <!-- Host home screen -->
+    <string name="connected_device">ಸಂಪರ್ಕಗೊಂಡ ಸಾಧನ</string>
+    <string name="no_device_connected">ಇನ್ನೂ ಯಾವುದೇ ಸಾಧನ ಸಂಪರ್ಕಗೊಂಡಿಲ್ಲ.</string>
+    <string name="cast">ಕಾಸ್ಟ್</string>
+    <string name="reverse_cast">ರಿವರ್ಸ್ ಕಾಸ್ಟ್</string>
+    <string name="byom">BYOM</string>
+    <string name="remove">ತೆಗೆದುಹಾಕಿ</string>
+    <string name="reconnecting">ಮರುಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ….</string>
+    <string name="waiting_for_device">ಸಾಧನಕ್ಕಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ…</string>
+    <string name="scan_qr_or_visit">ಮೊಬೈಲ್ ಕ್ಯಾಮೆರಾದಿಂದ QR ಕೋಡ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ ಅಥವಾ ಭೇಟಿ ನೀಡಿ :</string>
+    <string name="download_sharex_app">ನಿಮ್ಮ ಸಿಸ್ಟಂ ಪ್ರಕಾರದ ಆಧಾರದ ಮೇಲೆ Share X ಆ್ಯಪ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ.</string>
+    <string name="connect_to_wifi_network">Wi-Fi ನೆಟ್‌ವರ್ಕ್‌ಗೆ ಸಂಪರ್ಕಿಸಿ:</string>
+    <string name="open_sharex_app">ನಿಮ್ಮ ಸಿಸ್ಟಂನಲ್ಲಿ Share X ಆ್ಯಪ್ ತೆರೆಯಿರಿ</string>
+    <string name="start_screen_sharing">ಸ್ಕ್ರೀನ್ ಶೇರಿಂಗ್ ಪ್ರಾರಂಭಿಸಿ</string>
+    <string name="mobile_pc">ಮೊಬೈಲ್/PC</string>
+    <string name="enter_pin_to_cast">ಕಾಸ್ಟ್ ಮಾಡಲು ಕೆಳಗಿನ ಪಿನ್ ನಮೂದಿಸಿ</string>
+    <string name="browser">ಬ್ರೌಸರ್</string>
+
+    <!-- Received files screen -->
+    <string name="received_files">ಸ್ವೀಕರಿಸಿದ ಫೈಲ್‌ಗಳು</string>
+    <plurals name="files_count">
+        <item quantity="one">%1$d ಫೈಲ್</item>
+        <item quantity="other">%1$d ಫೈಲ್‌ಗಳು</item>
+    </plurals>
+    <string name="no_files_received">ಇನ್ನೂ ಯಾವುದೇ ಫೈಲ್ ಸ್ವೀಕರಿಸಿಲ್ಲ</string>
+    <string name="files_appear_here">ಸಂಪರ್ಕಗೊಂಡ ಸಾಧನಗಳಿಂದ ಕಳುಹಿಸಿದ ಫೈಲ್‌ಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ</string>
+    <string name="no_files_found">ಯಾವುದೇ ಫೈಲ್‌ಗಳು ಸಿಗಲಿಲ್ಲ</string>
+    <string name="try_different_file_name">ಬೇರೆ ಫೈಲ್ ಹೆಸರನ್ನು ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ನಿಮ್ಮ ಕಾಗುಣಿತವನ್ನು ಪರಿಶೀಲಿಸಿ</string>
+
+    <!-- Popups and dialogs -->
+    <string name="device_requests">ಸಾಧನ ವಿನಂತಿಗಳು</string>
+    <string name="requesting">ವಿನಂತಿಸಲಾಗುತ್ತಿದೆ</string>
+    <string name="unavailable">ಲಭ್ಯವಿಲ್ಲ</string>
+    <string name="ok">ಸರಿ</string>
+    <string name="allow_camera_mic_access">ಕ್ಯಾಮೆರಾ &amp; ಮೈಕ್ ಪ್ರವೇಶಕ್ಕೆ ಅನುಮತಿಸುವಿರಾ?</string>
+    <string name="byom_request_message">%1$s ಅವರ ವೀಡಿಯೊ ಮೀಟಿಂಗ್‌ಗಾಗಿ ಈ ಬೋರ್ಡ್‌ನ ಕ್ಯಾಮೆರಾ ಮತ್ತು ಮೈಕ್ರೊಫೋನ್ ಪ್ರವೇಶವನ್ನು ವಿನಂತಿಸುತ್ತಿದ್ದಾರೆ.</string>
+    <string name="byom_request_details">ಇದು ಬೋರ್ಡ್‌ನ ಕ್ಯಾಮೆರಾ ಮತ್ತು ಮೈಕ್ರೊಫೋನ್ ಅನ್ನು ಅವರ ಸಾಧನಕ್ಕೆ ಸ್ಟ್ರೀಮ್ ಮಾಡುತ್ತದೆ, ಇದರಿಂದ ಅವರು ಅದನ್ನು Zoom, Teams ಅಥವಾ Google Meet ನಲ್ಲಿ ಬಳಸಬಹುದು. ಸ್ಟ್ರೀಮ್ ಸೆಷನ್ ಸಮಯದಲ್ಲಿ ಮಾತ್ರ ಸಕ್ರಿಯವಾಗಿರುತ್ತದೆ ಮತ್ತು ಈ ಬೋರ್ಡ್‌ನಲ್ಲಿ ರೆಕಾರ್ಡ್ ಆಗುವುದಿಲ್ಲ ಅಥವಾ ಶೇಖರಿಸಲಾಗುವುದಿಲ್ಲ.</string>
+    <string name="deny">ನಿರಾಕರಿಸಿ</string>
+    <string name="allow">ಅನುಮತಿಸಿ</string>
+    <string name="no_receiver_found">ಯಾವುದೇ ರಿಸೀವರ್ ಸಿಗಲಿಲ್ಲ</string>
+    <string name="no_receiver_found_desc">ಫೋನ್, ಸ್ವೀಕರಿಸುವ ಸಾಧನದ ಅದೇ ನೆಟ್‌ವರ್ಕ್‌ಗೆ ಸಂಪರ್ಕಗೊಂಡಿರಬೇಕು.</string>
+    <string name="enable_remote_control">ರಿಮೋಟ್ ಕಂಟ್ರೋಲ್ ಸಕ್ರಿಯಗೊಳಿಸಿ</string>
+    <string name="remote_control_consent_body1">ಸಕ್ರಿಯ ShareX ಸ್ಕ್ರೀನ್-ಶೇರಿಂಗ್ ಸೆಷನ್ ಸಮಯದಲ್ಲಿ ದೂರದಲ್ಲಿರುವ ಶಿಕ್ಷಕ ಅಥವಾ ಪ್ರೆಸೆಂಟರ್ ಈ ಸಾಧನದ ಮೇಲೆ ಗೆಸ್ಚರ್‌ಗಳನ್ನು (ಟ್ಯಾಪ್, ಸ್ಕ್ರಾಲ್, ಸ್ವೈಪ್) ಮಾಡಲು ಅನುವಾಗುವಂತೆ ShareX, Android ನ ಆ್ಯಕ್ಸೆಸಿಬಿಲಿಟಿ ಸೇವೆಯನ್ನು ಬಳಸುತ್ತದೆ.</string>
+    <string name="remote_control_consent_body2">ರಿಮೋಟ್ ಕಂಟ್ರೋಲ್ ಸೆಷನ್ ನಡೆಯುತ್ತಿರುವಾಗ ಮಾತ್ರ ಈ ಸೇವೆ ಸಕ್ರಿಯವಾಗಿರುತ್ತದೆ. ಇದು ಯಾವುದೇ ವೈಯಕ್ತಿಕ ಡೇಟಾವನ್ನು ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ, ಶೇಖರಿಸುವುದಿಲ್ಲ ಅಥವಾ ರವಾನಿಸುವುದಿಲ್ಲ ಮತ್ತು ಸಕ್ರಿಯ ಸೆಷನ್‌ನ ಹೊರಗೆ ಬಳಸಲಾಗುವುದಿಲ್ಲ.\n\nಈ ಅನುಮತಿಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲು ನಿಮ್ಮನ್ನು ಆ್ಯಕ್ಸೆಸಿಬಿಲಿಟಿ ಸೆಟ್ಟಿಂಗ್‌ಗಳಿಗೆ ಕರೆದೊಯ್ಯಲಾಗುತ್ತದೆ.</string>
+    <string name="disagree">ಒಪ್ಪುವುದಿಲ್ಲ</string>
+    <string name="i_agree">ನಾನು ಒಪ್ಪುತ್ತೇನೆ</string>
+    <string name="app_not_compatible">ದುರದೃಷ್ಟವಶಾತ್, Share X ಆ್ಯಪ್ ನಿಮ್ಮ ಸಾಧನದೊಂದಿಗೆ ಹೊಂದಿಕೆಯಾಗುವುದಿಲ್ಲ.</string>
+    <string name="teachmint_owned_only">ಈ ಆ್ಯಪ್ Teachmint ಒಡೆತನದ ಸಿಸ್ಟಂಗಳಲ್ಲಿ ಮಾತ್ರ ಲಭ್ಯವಿದೆ.</string>
+    <string name="airplay_starting">AirPlay ರಿಸೀವರ್ ಪ್ರಾರಂಭವಾಗುತ್ತಿದೆ…</string>
+    <string name="airplay_stopped">AirPlay ರಿಸೀವರ್ ನಿಂತಿದೆ</string>
+    <string name="no_supported_app_found">ಬೆಂಬಲಿತ ಅಪ್ಲಿಕೇಶನ್ ಕಂಡುಬಂದಿಲ್ಲ</string>
+</resources>

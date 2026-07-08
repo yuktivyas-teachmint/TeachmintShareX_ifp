@@ -3,12 +3,9 @@ import java.io.ByteArrayOutputStream
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.composeCompiler)
-    // Hot Reload disabled — causes SIGABRT on iOS (BaseComposeScene closed during setContent)
-    // alias(libs.plugins.composeHotReload)
     alias(libs.plugins.kotlinSerialization)
 }
 
@@ -34,7 +31,7 @@ fun resolveBuildSecret(propertyKey: String, envKey: String): String {
 
 // ---------------------------------------------------------------------------
 // Version computation — mirrors androidApp/build.gradle.kts logic so the
-// shared library can expose the same version constants to all platforms.
+// shared library can expose the same version constants.
 // ---------------------------------------------------------------------------
 val versionSchema = "release-v"
 val defaultVersionName = "1.0.0"
@@ -66,7 +63,7 @@ val computedVersionName: String = if (System.getenv("CI") == "true") {
 val computedVersionCode: Int = baseVersionCode + (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 0)
 
 val generatedBuildSecretsDir: Provider<Directory> =
-    layout.buildDirectory.dir("generated/buildSecrets/commonMain/kotlin")
+    layout.buildDirectory.dir("generated/buildSecrets/main/kotlin")
 
 val generateBuildSecrets = tasks.register("generateBuildSecrets") {
     group = "build setup"
@@ -128,57 +125,8 @@ tasks.configureEach {
 }
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-
-    sourceSets {
-        androidMain.dependencies {
-            implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.core.ktx)
-            implementation(libs.compottie)
-            implementation(libs.ktor.client.okhttp)
-            // V-003: EncryptedSharedPreferences for secure credential storage
-            implementation(libs.androidx.security.crypto)
-            implementation(libs.ktor.server.core)
-            implementation(libs.ktor.server.cio)
-            implementation(libs.ktor.server.websockets)
-            implementation(libs.webrtc.kmp.android)
-            implementation(libs.zxing.core)
-            // AirPlay receiver dependencies (Android)
-            implementation(libs.bouncycastle)
-            implementation(libs.dd.plist)
-            implementation(libs.jmdns)
-            implementation(libs.firebase.config)
-            implementation(libs.firebase.crashlytics)
-        }
-        commonMain {
-            kotlin.srcDir(generatedBuildSecretsDir)
-        }
-        commonMain.dependencies {
-            implementation(libs.compose.runtime)
-            implementation(libs.compose.foundation)
-            implementation(libs.compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(libs.compose.ui)
-            implementation(libs.compose.components.resources)
-            implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.androidx.navigation.compose)
-            implementation(libs.kotlinx.serialization.json)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.websockets)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.zxing.core)
-        }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
@@ -186,6 +134,10 @@ android {
     namespace = "com.teachmint.sharex"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     ndkVersion = "27.0.12077973"
+
+    sourceSets.getByName("main") {
+        java.srcDir(generatedBuildSecretsDir)
+    }
 
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -247,9 +199,58 @@ android {
 }
 
 dependencies {
-    debugImplementation(libs.compose.uiTooling)
+    // Compose (androidx) — api so :androidApp compiles against them transitively.
+    api(platform(libs.androidx.compose.bom))
+    api(libs.androidx.compose.runtime)
+    api(libs.androidx.compose.foundation)
+    api(libs.androidx.compose.material3)
+    api(libs.androidx.compose.ui)
+    api(libs.androidx.compose.materialIconsExtended)
+    implementation(libs.androidx.compose.uiToolingPreview)
+    debugImplementation(libs.androidx.compose.uiTooling)
+
+    api(libs.androidx.lifecycle.viewmodelCompose)
+    api(libs.androidx.lifecycle.runtimeCompose)
+    api(libs.androidx.navigation.compose)
+    api(libs.androidx.activity.compose)
+    implementation(libs.androidx.core.ktx)
+
+    api(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.json)
+
+    // Networking
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.websockets)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.server.core)
+    implementation(libs.ktor.server.cio)
+    implementation(libs.ktor.server.websockets)
+
+    // WebRTC
+    implementation(libs.webrtc.kmp.android)
+
+    // QR + Lottie
+    implementation(libs.zxing.core)
+    implementation(libs.compottie)
+
+    // V-003: EncryptedSharedPreferences for secure credential storage
+    implementation(libs.androidx.security.crypto)
+
+    // AirPlay receiver dependencies
+    implementation(libs.bouncycastle)
+    implementation(libs.dd.plist)
+    implementation(libs.jmdns)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.config)
+    implementation(libs.firebase.crashlytics)
+
     debugImplementation("com.github.chuckerteam.chucker:library:4.0.0")
     releaseImplementation("com.github.chuckerteam.chucker:library-no-op:4.0.0")
-    // Firebase BOM must use top-level dependencies block (platform() removed from KMP source sets in Kotlin 2.3)
-    "androidMainImplementation"(platform(libs.firebase.bom))
+
+    testImplementation(libs.kotlin.testJunit)
+    testImplementation(libs.junit)
 }

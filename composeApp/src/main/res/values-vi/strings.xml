@@ -1,0 +1,104 @@
+<resources>
+    <string name="app_name">Share X</string>
+    <string name="device_name">Tên thiết bị</string>
+    <string name="devices_connected">%1$d/%2$d thiết bị đã kết nối</string>
+    <string name="open">Mở</string>
+    <string name="ready_to_receive">Sẵn sàng nhận</string>
+    <string name="casting_instructions">Quét mã QR hoặc nhập mã pin %1$s từ thiết bị của bạn để bắt đầu trình chiếu</string>
+    <string name="scan_the_qr_code">Quét mã QR</string>
+    <string name="same_wifi_requirement">Cả hai thiết bị phải được kết nối cùng một mạng Wi-Fi</string>
+    <string name="enter_code_instruction">Hoặc nhập mã pin bên dưới từ thiết bị của bạn để bắt đầu trình chiếu</string>
+    <string name="see_how_to_connect">Xem cách kết nối?</string>
+    <string name="powered_by">Share X được phát triển bởi Teachmint</string>
+    <string name="network_info">%1$s | Mã pin: %2$s</string>
+    <string name="connected_to">Đã kết nối với</string>
+    <string name="room_name">Room 204 Science Lab</string>
+    <string name="start_mirroring">Bắt đầu phản chiếu</string>
+    <string name="no_network_title">Không có mạng</string>
+    <string name="no_network_subtitle">Kết nối với một mạng</string>
+    <string name="network_error">Lỗi mạng</string>
+    <string name="wifi_fallback_name">Mạng</string>
+    <string name="cast_file">Trình chiếu tệp</string>
+    <string name="cast_file_desc">PDF, PPT, Hình ảnh</string>
+    <string name="send_file">Gửi tệp</string>
+    <string name="send_file_desc">Chuyển tệp đến thiết bị nhận</string>
+    <string name="annotate">Chú thích</string>
+    <string name="annotate_desc">Vẽ trên màn hình</string>
+    <string name="control">Điều khiển</string>
+    <string name="control_desc">Truy cập thiết bị từ xa</string>
+    <string name="disconnect">Ngắt kết nối</string>
+    <string name="wifi_name">ClassroomWiFi-5G</string>
+    <string name="remote_control_accessibility_description">Cho phép giáo viên hoặc người trình bày từ xa thực hiện các thao tác (chạm, cuộn, vuốt) trên thiết bị này trong phiên chia sẻ màn hình ShareX đang hoạt động. Chỉ hoạt động trong phiên trực tiếp. Không thu thập, lưu trữ hay truyền dữ liệu cá nhân.</string>
+    <string name="remote_control_accessibility_label">Điều khiển từ xa ShareX</string>
+
+    <!-- Settings screen -->
+    <string name="back">Quay lại</string>
+    <string name="setting">Cài đặt</string>
+    <string name="unknown_device">Thiết bị không xác định</string>
+    <string name="multiple_device_cast">Trình chiếu nhiều thiết bị</string>
+    <string name="multiple_device_cast_desc">Cho phép nhiều thiết bị kết nối</string>
+    <string name="direct_connection">Kết nối trực tiếp</string>
+    <string name="direct_connection_desc">Người dùng có thể kết nối mà không cần phê duyệt</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="app_version">Phiên bản ứng dụng: %1$s (%2$d)</string>
+    <string name="sharex_exclusive">Share X, chỉ có trên Teachmint X</string>
+    <string name="rename">Đổi tên</string>
+    <string name="cancel">Hủy</string>
+    <string name="update">Cập nhật</string>
+    <string name="close">Đóng</string>
+
+    <!-- Language selection dialog -->
+    <string name="which_language_do_you_prefer">Bạn muốn dùng ngôn ngữ nào?</string>
+    <string name="save">Lưu</string>
+
+    <!-- Host home screen -->
+    <string name="connected_device">Thiết bị đã kết nối</string>
+    <string name="no_device_connected">Chưa có thiết bị nào kết nối.</string>
+    <string name="cast">Trình chiếu</string>
+    <string name="reverse_cast">Trình chiếu ngược</string>
+    <string name="byom">BYOM</string>
+    <string name="remove">Xóa</string>
+    <string name="reconnecting">Đang kết nối lại….</string>
+    <string name="waiting_for_device">Đang chờ thiết bị…</string>
+    <string name="scan_qr_or_visit">Quét mã QR bằng camera điện thoại hoặc truy cập :</string>
+    <string name="download_sharex_app">Tải ứng dụng Share X phù hợp với loại hệ thống của bạn.</string>
+    <string name="connect_to_wifi_network">Kết nối với mạng Wi-Fi:</string>
+    <string name="open_sharex_app">Mở ứng dụng Share X trên hệ thống của bạn</string>
+    <string name="start_screen_sharing">Bắt đầu chia sẻ màn hình</string>
+    <string name="mobile_pc">Di động/PC</string>
+    <string name="enter_pin_to_cast">Nhập mã pin bên dưới để trình chiếu</string>
+    <string name="browser">Trình duyệt</string>
+
+    <!-- Received files screen -->
+    <string name="received_files">Tệp đã nhận</string>
+    <plurals name="files_count">
+        <item quantity="other">%1$d tệp</item>
+    </plurals>
+    <string name="no_files_received">Chưa nhận được tệp nào</string>
+    <string name="files_appear_here">Tệp gửi từ các thiết bị đã kết nối sẽ hiển thị tại đây</string>
+    <string name="no_files_found">Không tìm thấy tệp</string>
+    <string name="try_different_file_name">Thử tên tệp khác hoặc kiểm tra lại chính tả</string>
+
+    <!-- Popups and dialogs -->
+    <string name="device_requests">Yêu cầu từ thiết bị</string>
+    <string name="requesting">Đang yêu cầu</string>
+    <string name="unavailable">Không khả dụng</string>
+    <string name="ok">OK</string>
+    <string name="allow_camera_mic_access">Cho phép truy cập camera &amp; micrô?</string>
+    <string name="byom_request_message">%1$s đang yêu cầu quyền truy cập camera và micrô của bảng này cho cuộc họp video của họ.</string>
+    <string name="byom_request_details">Thao tác này sẽ truyền camera và micrô của bảng đến thiết bị của họ để họ có thể dùng trong Zoom, Teams hoặc Google Meet. Luồng truyền chỉ hoạt động trong phiên và không được ghi lại hay lưu trữ trên bảng này.</string>
+    <string name="deny">Từ chối</string>
+    <string name="allow">Cho phép</string>
+    <string name="no_receiver_found">Không tìm thấy thiết bị nhận</string>
+    <string name="no_receiver_found_desc">Điện thoại cần được kết nối cùng mạng với thiết bị nhận.</string>
+    <string name="enable_remote_control">Bật điều khiển từ xa</string>
+    <string name="remote_control_consent_body1">ShareX sử dụng Dịch vụ trợ năng của Android để cho phép giáo viên hoặc người trình bày từ xa thực hiện các thao tác (chạm, cuộn, vuốt) trên thiết bị này trong phiên chia sẻ màn hình ShareX đang hoạt động.</string>
+    <string name="remote_control_consent_body2">Dịch vụ này chỉ hoạt động khi phiên điều khiển từ xa đang diễn ra. Dịch vụ không thu thập, lưu trữ hay truyền bất kỳ dữ liệu cá nhân nào và không thể được sử dụng ngoài phiên đang hoạt động.\n\nBạn sẽ được chuyển đến Cài đặt trợ năng để bật quyền này.</string>
+    <string name="disagree">Không đồng ý</string>
+    <string name="i_agree">Tôi đồng ý</string>
+    <string name="app_not_compatible">Rất tiếc, ứng dụng Share X không tương thích với thiết bị của bạn.</string>
+    <string name="teachmint_owned_only">Ứng dụng này chỉ có thể truy cập trên các hệ thống thuộc sở hữu của Teachmint.</string>
+    <string name="airplay_starting">Đang khởi động bộ thu AirPlay…</string>
+    <string name="airplay_stopped">Bộ thu AirPlay đã dừng</string>
+    <string name="no_supported_app_found">Không tìm thấy ứng dụng được hỗ trợ</string>
+</resources>

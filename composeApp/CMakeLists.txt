@@ -12,15 +12,15 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 # Add source files
 add_library(miracast-rtp-receiver SHARED
     # Native RTP receiver implementation
-    src/androidMain/cpp/miracast/rtp_receiver.cpp
-    src/androidMain/cpp/miracast/rtp_parser.cpp
-    src/androidMain/cpp/miracast/ts_demuxer.cpp
-    src/androidMain/cpp/miracast/jni_bridge.cpp
+    src/main/cpp/miracast/rtp_receiver.cpp
+    src/main/cpp/miracast/rtp_parser.cpp
+    src/main/cpp/miracast/ts_demuxer.cpp
+    src/main/cpp/miracast/jni_bridge.cpp
 )
 
 # Include directories
 target_include_directories(miracast-rtp-receiver PRIVATE
-    src/androidMain/cpp/miracast/include
+    src/main/cpp/miracast/include
 )
 
 # Link libraries
@@ -55,16 +55,16 @@ target_link_options(miracast-rtp-receiver PRIVATE
 # AirPlay: FairPlay decryption JNI library (playfair)
 # ---------------------------------------------------------------------------
 add_library(playfair_jni SHARED
-    src/androidMain/jni/playfair/playfair.c
-    src/androidMain/jni/playfair/omg_hax.c
-    src/androidMain/jni/playfair/hand_garble.c
-    src/androidMain/jni/playfair/modified_md5.c
-    src/androidMain/jni/playfair/sap_hash.c
-    src/androidMain/jni/playfair_jni.c
+    src/main/jni/playfair/playfair.c
+    src/main/jni/playfair/omg_hax.c
+    src/main/jni/playfair/hand_garble.c
+    src/main/jni/playfair/modified_md5.c
+    src/main/jni/playfair/sap_hash.c
+    src/main/jni/playfair_jni.c
 )
 
 target_include_directories(playfair_jni PRIVATE
-    src/androidMain/jni/playfair
+    src/main/jni/playfair
 )
 
 find_library(log-lib log)

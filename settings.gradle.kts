@@ -25,6 +25,20 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        // Teachmint private Maven repo (hosts com.teachmint.ota)
+        maven {
+            val repoUrl: String by settings
+            val repoUser: String by settings
+            val repoPassword: String by settings
+            url = uri(repoUrl)
+            credentials {
+                username = repoUser
+                password = repoPassword
+            }
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
     }
 }
 

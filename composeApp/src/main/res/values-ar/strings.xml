@@ -1,0 +1,109 @@
+<resources>
+    <string name="app_name">Share X</string>
+    <string name="device_name">اسم الجهاز</string>
+    <string name="devices_connected">%1$d/%2$d جهاز متصل</string>
+    <string name="open">فتح</string>
+    <string name="ready_to_receive">جاهز للاستقبال</string>
+    <string name="casting_instructions">امسح رمز QR أو أدخل الرقم السري %1$s من جهازك لبدء البث</string>
+    <string name="scan_the_qr_code">امسح رمز QR</string>
+    <string name="same_wifi_requirement">يجب أن يكون كلا الجهازين متصلين بنفس شبكة Wi-Fi</string>
+    <string name="enter_code_instruction">أو أدخل الرقم السري أدناه من جهازك لبدء البث</string>
+    <string name="see_how_to_connect">هل تريد معرفة كيفية الاتصال؟</string>
+    <string name="powered_by">‏Share X مقدَّم من Teachmint</string>
+    <string name="network_info">%1$s | الرقم السري: %2$s</string>
+    <string name="connected_to">متصل بـ</string>
+    <string name="room_name">Room 204 Science Lab</string>
+    <string name="start_mirroring">بدء عرض الشاشة</string>
+    <string name="no_network_title">لا توجد شبكة</string>
+    <string name="no_network_subtitle">اتصل بشبكة</string>
+    <string name="network_error">خطأ في الشبكة</string>
+    <string name="wifi_fallback_name">الشبكة</string>
+    <string name="cast_file">بث ملف</string>
+    <string name="cast_file_desc">‏PDF، PPT، صورة</string>
+    <string name="send_file">إرسال ملف</string>
+    <string name="send_file_desc">نقل الملفات إلى الجهاز المستقبِل</string>
+    <string name="annotate">تعليق توضيحي</string>
+    <string name="annotate_desc">الرسم على الشاشة</string>
+    <string name="control">التحكم</string>
+    <string name="control_desc">الوصول إلى الجهاز عن بُعد</string>
+    <string name="disconnect">قطع الاتصال</string>
+    <string name="wifi_name">ClassroomWiFi-5G</string>
+    <string name="remote_control_accessibility_description">يتيح لمعلّم أو مقدّم عن بُعد تنفيذ إيماءات (نقر، تمرير، سحب) على هذا الجهاز أثناء جلسة مشاركة شاشة ShareX نشطة. يعمل فقط أثناء الجلسة المباشرة. لا يجمع أي بيانات شخصية ولا يخزنها ولا ينقلها.</string>
+    <string name="remote_control_accessibility_label">التحكم عن بُعد في ShareX</string>
+
+    <!-- Settings screen -->
+    <string name="back">رجوع</string>
+    <string name="setting">الإعدادات</string>
+    <string name="unknown_device">جهاز غير معروف</string>
+    <string name="multiple_device_cast">بث من أجهزة متعددة</string>
+    <string name="multiple_device_cast_desc">السماح باتصال أجهزة متعددة</string>
+    <string name="direct_connection">اتصال مباشر</string>
+    <string name="direct_connection_desc">يمكن للمستخدمين الاتصال دون أي موافقة</string>
+    <string name="language">اللغة</string>
+    <string name="app_version">إصدار التطبيق: %1$s (%2$d)</string>
+    <string name="sharex_exclusive">‏Share X متاح حصريًا على Teachmint X</string>
+    <string name="rename">إعادة تسمية</string>
+    <string name="cancel">إلغاء</string>
+    <string name="update">تحديث</string>
+    <string name="close">إغلاق</string>
+
+    <!-- Language selection dialog -->
+    <string name="which_language_do_you_prefer">ما اللغة التي تفضلها؟</string>
+    <string name="save">حفظ</string>
+
+    <!-- Host home screen -->
+    <string name="connected_device">الجهاز المتصل</string>
+    <string name="no_device_connected">لا يوجد جهاز متصل بعد.</string>
+    <string name="cast">بث</string>
+    <string name="reverse_cast">بث عكسي</string>
+    <string name="byom">BYOM</string>
+    <string name="remove">إزالة</string>
+    <string name="reconnecting">جارٍ إعادة الاتصال….</string>
+    <string name="waiting_for_device">في انتظار الجهاز…</string>
+    <string name="scan_qr_or_visit">امسح رمز QR بكاميرا الهاتف أو تفضل بزيارة:</string>
+    <string name="download_sharex_app">نزّل تطبيق Share X حسب نوع نظامك.</string>
+    <string name="connect_to_wifi_network">اتصل بشبكة Wi-Fi:</string>
+    <string name="open_sharex_app">افتح تطبيق Share X على نظامك</string>
+    <string name="start_screen_sharing">ابدأ مشاركة الشاشة</string>
+    <string name="mobile_pc">هاتف/كمبيوتر</string>
+    <string name="enter_pin_to_cast">أدخل الرقم السري أدناه للبث</string>
+    <string name="browser">المتصفح</string>
+
+    <!-- Received files screen -->
+    <string name="received_files">الملفات المستلمة</string>
+    <plurals name="files_count">
+        <item quantity="zero">%1$d ملف</item>
+        <item quantity="one">%1$d ملف</item>
+        <item quantity="two">%1$d ملفان</item>
+        <item quantity="few">%1$d ملفات</item>
+        <item quantity="many">%1$d ملفًا</item>
+        <item quantity="other">%1$d ملف</item>
+    </plurals>
+    <string name="no_files_received">لم يتم استلام أي ملفات بعد</string>
+    <string name="files_appear_here">ستظهر هنا الملفات المرسلة من الأجهزة المتصلة</string>
+    <string name="no_files_found">لم يتم العثور على ملفات</string>
+    <string name="try_different_file_name">جرّب اسم ملف مختلفًا أو تحقق من الإملاء</string>
+
+    <!-- Popups and dialogs -->
+    <string name="device_requests">طلبات الأجهزة</string>
+    <string name="requesting">قيد الطلب</string>
+    <string name="unavailable">غير متاح</string>
+    <string name="ok">موافق</string>
+    <string name="allow_camera_mic_access">السماح بالوصول إلى الكاميرا والميكروفون؟</string>
+    <string name="byom_request_message">يطلب %1$s الوصول إلى كاميرا هذه السبورة وميكروفونها لاجتماع الفيديو الخاص به.</string>
+    <string name="byom_request_details">سيؤدي هذا إلى بث كاميرا السبورة وميكروفونها إلى جهازه ليتمكن من استخدامهما في Zoom أو Teams أو Google Meet. يكون البث نشطًا فقط أثناء الجلسة ولا يتم تسجيله أو تخزينه على هذه السبورة.</string>
+    <string name="deny">رفض</string>
+    <string name="allow">سماح</string>
+    <string name="no_receiver_found">لم يتم العثور على مستقبِل</string>
+    <string name="no_receiver_found_desc">يجب أن يكون الهاتف متصلاً بنفس الشبكة المتصل بها الجهاز المستقبِل.</string>
+    <string name="enable_remote_control">تفعيل التحكم عن بُعد</string>
+    <string name="remote_control_consent_body1">يستخدم ShareX خدمة إمكانية الوصول في Android للسماح لمعلّم أو مقدّم عن بُعد بتنفيذ إيماءات (نقر، تمرير، سحب) على هذا الجهاز أثناء جلسة مشاركة شاشة ShareX نشطة.</string>
+    <string name="remote_control_consent_body2">هذه الخدمة نشطة فقط أثناء جلسة تحكم عن بُعد قيد التقدم. لا تجمع أي بيانات شخصية ولا تخزنها ولا تنقلها، ولا يمكن استخدامها خارج جلسة نشطة.\n\nسيتم توجيهك إلى إعدادات إمكانية الوصول لتفعيل هذا الإذن.</string>
+    <string name="disagree">لا أوافق</string>
+    <string name="i_agree">أوافق</string>
+    <string name="app_not_compatible">للأسف، تطبيق Share X غير متوافق مع جهازك.</string>
+    <string name="teachmint_owned_only">هذا التطبيق متاح فقط على الأنظمة المملوكة لشركة Teachmint.</string>
+    <string name="airplay_starting">جارٍ تشغيل مستقبِل AirPlay…</string>
+    <string name="airplay_stopped">توقف مستقبِل AirPlay</string>
+    <string name="no_supported_app_found">لم يتم العثور على تطبيق مدعوم</string>
+</resources>

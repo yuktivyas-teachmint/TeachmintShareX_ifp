@@ -1,0 +1,11 @@
+package com.teachmint.sharex.share.shared
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+
+const val MIRACAST_HOST_SHARE_CLIENT_ID = "__miracast_host_share__"
+
+fun ActiveShare.isMiracastShare(): Boolean = clientId == MIRACAST_HOST_SHARE_CLIENT_ID
+
+fun isMiracastClientId(clientId: String): Boolean = clientId == MIRACAST_HOST_SHARE_CLIENT_ID
+
