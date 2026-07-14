@@ -5,6 +5,8 @@ import android.util.Log
 import com.teachmint.ota.Ota
 import com.teachmint.ota.model.UpdateState
 import com.teachmint.sharex.remoteconfig.RemoteConfigManager
+import com.teachmint.sharex.share.shared.InstalledVersionStore
+import com.teachmint.sharex.share.shared.compareVersionNames
 import org.json.JSONObject
 
 /**
@@ -61,6 +63,11 @@ object OtaUpdateManager {
             TAG,
             "Update ${payload.versionNumber} available (installed $currentVersion), downloading ${payload.apkUrl}",
         )
+        // Remember which version this download delivers: if the APK itself was
+        // built with a stale versionName, this record is what stops us from
+        // re-downloading the same update forever and what the settings screen
+        // shows after the install (see InstalledVersionStore).
+        InstalledVersionStore.onUpdateDownloadStarted(context, payload.versionNumber)
         Ota.downloadFromUrl(payload.apkUrl)
     }
 
@@ -83,19 +90,14 @@ object OtaUpdateManager {
         }
     }
 
-    private fun installedVersionName(context: Context): String =
-        runCatching {
+    private fun installedVersionName(context: Context): String {
+        val packageVersion = runCatching {
             context.packageManager.getPackageInfo(context.packageName, 0).versionName
         }.getOrNull() ?: "0.0.0"
+        // Account for an applied OTA update whose APK carries a stale versionName.
+        return InstalledVersionStore.effectiveVersionName(context, packageVersion)
+    }
 
     /** Numeric segment-wise comparison: "1.0.10" > "1.0.9". Missing segments count as 0. */
-    internal fun compareVersions(a: String, b: String): Int {
-        val aParts = a.split(".").map { it.trim().toIntOrNull() ?: 0 }
-        val bParts = b.split(".").map { it.trim().toIntOrNull() ?: 0 }
-        for (i in 0 until maxOf(aParts.size, bParts.size)) {
-            val diff = (aParts.getOrElse(i) { 0 }).compareTo(bParts.getOrElse(i) { 0 })
-            if (diff != 0) return diff
-        }
-        return 0
-    }
+    internal fun compareVersions(a: String, b: String): Int = compareVersionNames(a, b)
 }

@@ -37,28 +37,32 @@ val versionSchema = "release-v"
 val defaultVersionName = "1.0.0"
 val baseVersionCode = 1000
 
-val computedVersionName: String = if (System.getenv("CI") == "true") {
-    runCatching {
-        val fromEnv = System.getenv("GITHUB_REF_NAME")?.trim().orEmpty()
-        val branch = if (fromEnv.isNotEmpty()) {
-            fromEnv
-        } else {
-            val stdout = ByteArrayOutputStream()
-            exec {
-                commandLine("sh", "-c", "git branch --show-current | tail -n 1")
-                standardOutput = stdout
+// Keep in sync with androidApp/build.gradle.kts: local OTA builds pass the real
+// version with -PappVersionName so the generated APP_VERSION_NAME fallback and
+// the APK manifest agree.
+val computedVersionName: String = findProperty("appVersionName")?.toString()?.takeIf { it.isNotBlank() }
+    ?: if (System.getenv("CI") == "true") {
+        runCatching {
+            val fromEnv = System.getenv("GITHUB_REF_NAME")?.trim().orEmpty()
+            val branch = if (fromEnv.isNotEmpty()) {
+                fromEnv
+            } else {
+                val stdout = ByteArrayOutputStream()
+                exec {
+                    commandLine("sh", "-c", "git branch --show-current | tail -n 1")
+                    standardOutput = stdout
+                }
+                stdout.toString().trim()
             }
-            stdout.toString().trim()
-        }
-        when {
-            branch.startsWith(versionSchema) -> branch.removePrefix(versionSchema)
-            branch.isNotEmpty() -> branch
-            else -> defaultVersionName
-        }
-    }.getOrElse { defaultVersionName }
-} else {
-    defaultVersionName
-}
+            when {
+                branch.startsWith(versionSchema) -> branch.removePrefix(versionSchema)
+                branch.isNotEmpty() -> branch
+                else -> defaultVersionName
+            }
+        }.getOrElse { defaultVersionName }
+    } else {
+        defaultVersionName
+    }
 
 val computedVersionCode: Int = baseVersionCode + (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 0)
 

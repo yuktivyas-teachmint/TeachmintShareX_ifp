@@ -47,6 +47,19 @@ class ShareXApplication : Application() {
             .onFailure { Log.e(TAG, "Failed to resolve device identity for OTA", it) }
             .getOrNull()
 
+        // Disable the library's own check scheduler entirely: even with a huge
+        // checkIntervalMinutes, WorkManager runs the FIRST iteration of the
+        // periodic worker immediately after install, which hits the (chakra)
+        // backend route and surfaces "Update Failed: Server error" on first
+        // launch. The enabled flag only gates the scheduler — downloadFromUrl/
+        // install used by OtaUpdateManager are unaffected. Must be set before
+        // init, which schedules (or, with the flag off, cancels) the worker.
+        // OtaPrefs is internal to the library, so write its pref directly.
+        getSharedPreferences("ota_prefs", MODE_PRIVATE)
+            .edit()
+            .putBoolean("ota_auto_update_enabled", false)
+            .apply()
+
         Ota.init(this) {
             updateUrl = NetworkConfig.teachmintBaseUrl + OTA_APK_VERSION_ENDPOINT
             headers =
@@ -58,8 +71,9 @@ class ShareXApplication : Application() {
             appName = "ShareX IFP"
             network {
                 // Updates are driven by the Firebase remote-config "ota_update" key
-                // (see OtaUpdateManager), not the library's backend polling worker —
-                // park its periodic check a year out to effectively disable it.
+                // (see OtaUpdateManager), not the library's backend polling worker.
+                // The worker is disabled via OtaPrefs above; the parked interval
+                // is just a backstop in case the pref is ever flipped back on.
                 checkIntervalMinutes = 60 * 24 * 365
             }
             verification {

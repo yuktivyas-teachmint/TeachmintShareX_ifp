@@ -23,7 +23,14 @@ private fun installedPackageInfo(): PackageInfo? {
 }
 
 val APP_VERSION: String
-    get() = installedPackageInfo()?.versionName ?: GeneratedBuildSecrets.APP_VERSION_NAME
+    get() {
+        val packageVersion = installedPackageInfo()?.versionName
+            ?: GeneratedBuildSecrets.APP_VERSION_NAME
+        // An OTA APK built without a bumped versionName still reports the old
+        // version here — prefer the version the update was published as.
+        val context = AndroidContextHolder.applicationContext ?: return packageVersion
+        return InstalledVersionStore.effectiveVersionName(context, packageVersion)
+    }
 
 val APP_VERSION_CODE: Int
     get() = installedPackageInfo()?.longVersionCode?.toInt() ?: GeneratedBuildSecrets.APP_VERSION_CODE

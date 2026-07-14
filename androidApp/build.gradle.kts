@@ -16,34 +16,38 @@ if (file("google-services.json").exists()) {
 }
 
 val versionSchema = "release-v"
-val defaultVersionName = "1.0.5"
-val baseVersionCode = 1005
+val defaultVersionName = "1.0.0"
+val baseVersionCode = 1000
 
-val computedVersionName: String = if (System.getenv("CI") == "true") {
-    runCatching {
-        val fromEnv = System.getenv("GITHUB_REF_NAME")?.trim().orEmpty()
-        val branch = if (fromEnv.isNotEmpty()) {
-            fromEnv
-        } else {
-            val stdout = ByteArrayOutputStream()
-            exec {
-                commandLine("sh", "-c", "git branch --show-current | tail -n 1")
-                standardOutput = stdout
+// Local (non-CI) builds otherwise stamp defaultVersionName, so an OTA APK built
+// locally would report a stale version after installing — pass the real version
+// with -PappVersionName=1.0.1 when building an APK for OTA publication.
+val computedVersionName: String = findProperty("appVersionName")?.toString()?.takeIf { it.isNotBlank() }
+    ?: if (System.getenv("CI") == "true") {
+        runCatching {
+            val fromEnv = System.getenv("GITHUB_REF_NAME")?.trim().orEmpty()
+            val branch = if (fromEnv.isNotEmpty()) {
+                fromEnv
+            } else {
+                val stdout = ByteArrayOutputStream()
+                exec {
+                    commandLine("sh", "-c", "git branch --show-current | tail -n 1")
+                    standardOutput = stdout
+                }
+                stdout.toString().trim()
             }
-            stdout.toString().trim()
+            when {
+                branch.startsWith(versionSchema) -> branch.removePrefix(versionSchema)
+                branch.isNotEmpty() -> branch
+                else -> defaultVersionName
+            }
+        }.getOrElse {
+            logger.warn("Failed to resolve branch for versionName: ${it.message}")
+            defaultVersionName
         }
-        when {
-            branch.startsWith(versionSchema) -> branch.removePrefix(versionSchema)
-            branch.isNotEmpty() -> branch
-            else -> defaultVersionName
-        }
-    }.getOrElse {
-        logger.warn("Failed to resolve branch for versionName: ${it.message}")
+    } else {
         defaultVersionName
     }
-} else {
-    defaultVersionName
-}
 
 val buildNumber: Int = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 0
 val computedVersionCode: Int = baseVersionCode + buildNumber
