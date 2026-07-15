@@ -741,10 +741,13 @@ private fun HostScreenCastingManagementCard(
                                 )
                             }
                         } else {
+                            // BYOM needs a virtual camera/mic on the client — mobile clients don't support it
+                            val isByomSupported = device.deviceType != ClientDeviceType.Mobile
                             val isByomActive = device.clientId in activeByomClientIds
                             ScreenCastingSwitchAction(
-                                isEnabled = isByomActive,
+                                isEnabled = isByomActive && isByomSupported,
                                 onCheckedChange = { enabled -> onByomToggle(device.clientId, enabled) },
+                                isInteractionEnabled = isByomSupported,
                                 modifier = Modifier.weight(0.8f),
                             )
                         }
@@ -864,6 +867,7 @@ private fun ScreenCastingSwitchAction(
     isEnabled: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    isInteractionEnabled: Boolean = true,
 ) {
     Box(
         modifier = modifier,
@@ -872,12 +876,17 @@ private fun ScreenCastingSwitchAction(
         Switch(
             checked = isEnabled,
             onCheckedChange = onCheckedChange,
-            modifier = Modifier.scale(0.6f),
+            enabled = isInteractionEnabled,
+            modifier = Modifier
+                .scale(0.6f)
+                .alpha(if (isInteractionEnabled) 1f else 0.45f),
             colors = SwitchDefaults.colors(
                 checkedThumbColor = TextPrimary,
                 checkedTrackColor = PrimaryAccent,
                 uncheckedThumbColor = TextSecondary,
                 uncheckedTrackColor = AppBorder,
+                disabledUncheckedThumbColor = TextSecondary,
+                disabledUncheckedTrackColor = AppBorder,
             ),
         )
     }
@@ -931,22 +940,9 @@ private fun mapConnectedClientsToManagementItems(
             ScreenCastingDeviceItem(
                 clientId = client.clientId,
                 clientName = client.name.ifBlank { "Unknown Device" },
-                deviceType = detectClientDeviceType(client.name),
+                deviceType = resolveClientDeviceType(client.platform, client.name),
             )
         }
-}
-
-private fun detectClientDeviceType(clientName: String): ClientDeviceType {
-    val normalizedName = clientName.lowercase()
-    return when {
-        normalizedName.contains("android") ||
-            normalizedName.contains("iphone") ||
-            normalizedName.contains("ios") ||
-            normalizedName.contains("ipad") ||
-            normalizedName.contains("phone") ||
-            normalizedName.contains("mobile") -> ClientDeviceType.Mobile
-        else -> ClientDeviceType.Laptop
-    }
 }
 
 @Composable
@@ -1251,7 +1247,7 @@ fun ClientScreenTile(
             }
 
             if (showClientInfo) {
-                val shareDeviceType = detectClientDeviceType(share.clientName)
+                val shareDeviceType = resolveClientDeviceType(platform = null, clientName = share.clientName)
                 val infoChipHeight = AppDimens.dp36
                 val infoChipShape = RoundedCornerShape(AppDimens.dp8)
                 val infoChipBackground = AppSurface.copy(alpha = 0.72f)

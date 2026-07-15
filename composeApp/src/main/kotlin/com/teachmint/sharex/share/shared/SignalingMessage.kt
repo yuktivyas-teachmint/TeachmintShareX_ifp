@@ -10,6 +10,8 @@ sealed class SignalingMessage {
     data class Hello(
         val clientId: String,
         val clientName: String,
+        /** Client OS, e.g. "android", "ios", "macos", "windows". Null for older clients. */
+        val platform: String? = null,
     ) : SignalingMessage()
 
     @Serializable
@@ -201,6 +203,7 @@ sealed class SignalingMessage {
         val hostId: String,
         val clientId: String,
         val clientName: String,
+        val platform: String? = null,
     ) : SignalingMessage()
 
     @Serializable
@@ -209,6 +212,7 @@ sealed class SignalingMessage {
         val pin: String,
         val clientId: String,
         val clientName: String,
+        val platform: String? = null,
     ) : SignalingMessage()
 
     /** File upload relayed through the signaling server (web client → host). */

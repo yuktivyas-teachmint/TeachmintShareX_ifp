@@ -160,7 +160,11 @@ class HostSignalingServer constructor(
                                             previousSession.close()
                                         }
                                     }
-                                    val info = ClientInfo(clientId = message.clientId, name = message.clientName)
+                                    val info = ClientInfo(
+                                        clientId = message.clientId,
+                                        name = message.clientName,
+                                        platform = message.platform,
+                                    )
                                     val isNewClient = clients.put(message.clientId, info) == null
                                     _connectedClients.value = clients.values.toList()
                                     if (isNewClient) {

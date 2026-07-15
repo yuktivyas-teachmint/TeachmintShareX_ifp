@@ -223,6 +223,7 @@ class DefaultHostController(
     private var blockedToastClearJob: Job? = null
     private var deferredMiracastStartJob: Job? = null
     private var captureRestartObserverJob: Job? = null
+    private var byomCameraFailureObserverJob: Job? = null
 
     override fun start() {
         if (startJob != null) return
@@ -238,6 +239,15 @@ class DefaultHostController(
         captureRestartObserverJob = scope.launch {
             webRtcEngine.captureRestartRequested.collect {
                 handleCaptureStuckRestart()
+            }
+        }
+        // Observe fatal BYOM camera failures (camera revoked by device policy,
+        // disconnected, ...). Without this, the cached camera track outlives the
+        // dead capturer and every later BYOM session streams zero video frames.
+        byomCameraFailureObserverJob?.cancel()
+        byomCameraFailureObserverJob = scope.launch {
+            webRtcEngine.cameraCaptureFailed.collect {
+                handleByomCameraFailure()
             }
         }
         startJob = scope.launch {
@@ -383,6 +393,8 @@ class DefaultHostController(
         deferredMiracastStartJob = null
         captureRestartObserverJob?.cancel()
         captureRestartObserverJob = null
+        byomCameraFailureObserverJob?.cancel()
+        byomCameraFailureObserverJob = null
         // Use a detached scope for shutdown so cleanup still runs even if the UI/composition
         // scope is already being cancelled during activity teardown.
         CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
@@ -1087,6 +1099,33 @@ class DefaultHostController(
         }
     }
 
+    /**
+     * The BYOM camera died mid-session (revoked by device policy, disconnected,
+     * fatal capture error). End every active BYOM session and drop the cached
+     * camera track — enabling BYOM again re-opens the camera from scratch, and
+     * if the camera is still blocked the failure surfaces immediately instead
+     * of streaming a dead track. No automatic retry: a persistent policy block
+     * would otherwise loop open→error→reopen forever.
+     */
+    private fun handleByomCameraFailure() {
+        val affectedClients = byomSessions.keys.toList()
+        println("HOST_CONTROLLER: BYOM camera capture failed — ending ${affectedClients.size} active session(s)")
+        affectedClients.forEach { clientId ->
+            scope.launch {
+                runCatching {
+                    sendToClient(clientId, isRemoteClient(clientId), SignalingMessage.StopBYOM)
+                }
+            }
+            cleanupBYOM(clientId)
+        }
+        // Also drop a stale track when the failure fires with no session alive
+        // (cleanupBYOM only releases capture when it removes the last session).
+        if (affectedClients.isEmpty()) {
+            runCatching { webRtcEngine.stopCameraCapture() }
+            hostCameraTrack = null
+        }
+    }
+
     private fun isRemoteClient(clientId: String): Boolean {
         return remoteClientIds.contains(clientId)
     }
@@ -1129,7 +1168,7 @@ class DefaultHostController(
             val request = PendingShareRequest(
                 clientId = client.clientId,
                 clientName = resolvedName,
-                deviceType = detectClientDeviceType(resolvedName),
+                deviceType = resolveClientDeviceType(client.platform, resolvedName),
             )
             state.copy(
                 pendingShareRequests = state.pendingShareRequests
@@ -2135,19 +2174,6 @@ class DefaultHostController(
         discoveryService.stopBroadcast()
         discoveryService.startBroadcast(hostInfo)
         remoteSignalingService?.updateHostName(hostName)
-    }
-
-    private fun detectClientDeviceType(clientName: String): ClientDeviceType {
-        val normalizedName = clientName.lowercase()
-        return when {
-            normalizedName.contains("android") ||
-                normalizedName.contains("iphone") ||
-                normalizedName.contains("ios") ||
-                normalizedName.contains("ipad") ||
-                normalizedName.contains("phone") ||
-                normalizedName.contains("mobile") -> ClientDeviceType.Mobile
-            else -> ClientDeviceType.Laptop
-        }
     }
 
     private fun startPinRotationWatcher() {

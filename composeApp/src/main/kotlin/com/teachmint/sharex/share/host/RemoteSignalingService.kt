@@ -329,7 +329,11 @@ class RemoteSignalingService(
         when (payload) {
             is SignalingMessage.Hello -> {
                 val alreadyConnected = connectedClientsMap.containsKey(clientId)
-                val clientInfo = ClientInfo(clientId = clientId, name = payload.clientName)
+                val clientInfo = ClientInfo(
+                    clientId = clientId,
+                    name = payload.clientName,
+                    platform = payload.platform,
+                )
                 connectedClientsMap[clientId] = clientInfo
                 _connectedClients.value = connectedClientsMap.values.toList()
                 if (alreadyConnected) {

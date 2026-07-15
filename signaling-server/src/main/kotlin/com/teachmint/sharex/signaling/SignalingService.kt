@@ -191,6 +191,7 @@ class SignalingService {
                         hostId = message.hostId,
                         clientId = message.clientId,
                         clientName = sanitizeName(message.clientName),
+                        platform = message.platform,
                     )
                 }
             }
@@ -401,6 +402,7 @@ class SignalingService {
             hostId = host.hostId,
             clientId = message.clientId,
             clientName = sanitizeName(message.clientName),
+            platform = message.platform,
         )
     }
 
@@ -410,6 +412,7 @@ class SignalingService {
         hostId: String,
         clientId: String,
         clientName: String,
+        platform: String? = null,
     ) {
         // F-001: Enforce client capacity limit
         if (!clients.containsKey(clientId) && clients.size >= MAX_TOTAL_CLIENTS) {
@@ -448,7 +451,8 @@ class SignalingService {
             to = hostId,
             payload = SignalingMessage.Hello(
                 clientId = clientId,
-                clientName = clientName
+                clientName = clientName,
+                platform = platform,
             )
         )
         host.session.send(Frame.Text(encodeSignaling(relayToHost)))
@@ -663,6 +667,7 @@ class SignalingService {
                 hostId = hostId,
                 clientId = clientId,
                 clientName = clientName,
+                platform = platform,
             )
         }
 
@@ -672,6 +677,7 @@ class SignalingService {
                 pin = pin,
                 clientId = clientId,
                 clientName = clientName,
+                platform = platform,
             )
         }
 
@@ -679,6 +685,7 @@ class SignalingService {
             return SignalingMessage.Hello(
                 clientId = clientId,
                 clientName = clientName,
+                platform = platform,
             )
         }
 

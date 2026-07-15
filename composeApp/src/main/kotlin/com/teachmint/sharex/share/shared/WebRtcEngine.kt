@@ -156,6 +156,15 @@ interface WebRtcEngine {
     fun stopCameraCapture() {}
 
     /**
+     * Emits when the BYOM camera capturer dies after a successful start —
+     * camera disconnected, revoked by device policy, or a fatal capture error.
+     * The host controller observes this to tear down active BYOM sessions and
+     * drop its cached camera track, so the next session re-opens the camera
+     * instead of silently serving a dead track.
+     */
+    val cameraCaptureFailed: SharedFlow<Unit> get() = MutableSharedFlow(extraBufferCapacity = 1)
+
+    /**
      * Create a peer connection for a BYOM session.
      *
      * Unlike [createPeerConnection], implementations must back this connection

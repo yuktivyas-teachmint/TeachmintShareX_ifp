@@ -84,6 +84,7 @@ private fun decodeSignalingElement(element: JsonElement): SignalingMessage? {
             hostId = hostId,
             clientId = clientId,
             clientName = clientName,
+            platform = platform,
         )
     }
 
@@ -93,6 +94,7 @@ private fun decodeSignalingElement(element: JsonElement): SignalingMessage? {
             pin = pin,
             clientId = clientId,
             clientName = clientName,
+            platform = platform,
         )
     }
 
@@ -100,6 +102,7 @@ private fun decodeSignalingElement(element: JsonElement): SignalingMessage? {
         return SignalingMessage.Hello(
             clientId = clientId,
             clientName = clientName,
+            platform = platform,
         )
     }
 

@@ -42,6 +42,8 @@ data class HostInfo(
 data class ClientInfo(
     val clientId: String,
     val name: String,
+    /** Client OS as reported in the signaling handshake ("android", "ios", "macos", "windows"). Null for older clients. */
+    val platform: String? = null,
 )
 
 data class ActiveShare(
@@ -74,6 +76,28 @@ data class HostConnectionSettings(
 enum class ClientDeviceType {
     Mobile,
     Laptop,
+}
+
+/**
+ * Resolves a client's device type from the platform it reported in the signaling
+ * handshake, falling back to a device-name heuristic for older clients that
+ * don't send a platform.
+ */
+fun resolveClientDeviceType(platform: String?, clientName: String): ClientDeviceType {
+    when (platform?.trim()?.lowercase()) {
+        "android", "ios", "ipados" -> return ClientDeviceType.Mobile
+        "macos", "mac", "osx", "windows", "linux" -> return ClientDeviceType.Laptop
+    }
+    val normalizedName = clientName.lowercase()
+    return when {
+        normalizedName.contains("android") ||
+            normalizedName.contains("iphone") ||
+            normalizedName.contains("ios") ||
+            normalizedName.contains("ipad") ||
+            normalizedName.contains("phone") ||
+            normalizedName.contains("mobile") -> ClientDeviceType.Mobile
+        else -> ClientDeviceType.Laptop
+    }
 }
 
 data class PendingShareRequest(

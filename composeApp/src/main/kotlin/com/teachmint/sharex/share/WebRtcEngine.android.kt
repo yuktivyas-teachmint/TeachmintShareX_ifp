@@ -185,7 +185,36 @@ class AndroidWebRtcEngine : WebRtcEngine {
             PeerConnectionFactory.InitializationOptions.builder(context)
                 .createInitializationOptions()
         )
+        // Log the level of every captured mic buffer (peak/avg since last log,
+        // ~5s cadence) so "host sends silence" vs "host sends audio but client
+        // hears nothing" is decidable from logcat alone.
+        var micCallbackCount = 0L
+        var micWindowPeak = 0
+        var micWindowAbsSum = 0L
+        var micWindowSamples = 0L
         val adm = JavaAudioDeviceModule.builder(context)
+            .setSamplesReadyCallback { samples ->
+                micCallbackCount++
+                val data = samples.data
+                var i = 0
+                while (i + 1 < data.size) {
+                    val s = (((data[i + 1].toInt() shl 8) or (data[i].toInt() and 0xFF)).toShort()).toInt()
+                    val a = if (s < 0) -s else s
+                    if (a > micWindowPeak) micWindowPeak = a
+                    micWindowAbsSum += a
+                    micWindowSamples++
+                    i += 2
+                }
+                if (micCallbackCount == 1L || micCallbackCount % 500L == 0L) {
+                    val avg = if (micWindowSamples > 0) micWindowAbsSum / micWindowSamples else 0
+                    val silence = if (micWindowPeak < 50) " ⚠️ MIC CAPTURING SILENCE" else ""
+                    println(
+                        "BYOM_MIC HOST_SEND#$micCallbackCount: ${samples.sampleRate}Hz " +
+                            "${samples.channelCount}ch peak=$micWindowPeak avg=$avg (max 32767)$silence"
+                    )
+                    micWindowPeak = 0; micWindowAbsSum = 0; micWindowSamples = 0
+                }
+            }
             .createAudioDeviceModule()
         byomAudioDeviceModule = adm
         val eglContext = WebRtc.rootEglBase.eglBaseContext
@@ -526,6 +555,38 @@ class AndroidWebRtcEngine : WebRtcEngine {
     private var byomCameraTrackNative: org.webrtc.VideoTrack? = null
     private var byomCameraSurfaceHelper: SurfaceTextureHelper? = null
 
+    private val _cameraCaptureFailed = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    override val cameraCaptureFailed: kotlinx.coroutines.flow.SharedFlow<Unit> =
+        _cameraCaptureFailed.asSharedFlow()
+
+    private val byomCameraEventsHandler = object : org.webrtc.CameraVideoCapturer.CameraEventsHandler {
+        override fun onCameraError(errorDescription: String?) {
+            println("BYOM_CAMERA: ❌ Camera error: $errorDescription")
+            _cameraCaptureFailed.tryEmit(Unit)
+        }
+
+        override fun onCameraDisconnected() {
+            println("BYOM_CAMERA: ❌ Camera disconnected")
+            _cameraCaptureFailed.tryEmit(Unit)
+        }
+
+        override fun onCameraFreezed(errorDescription: String?) {
+            println("BYOM_CAMERA: ⚠️ Camera freezed: $errorDescription")
+        }
+
+        override fun onCameraOpening(cameraName: String?) {
+            println("BYOM_CAMERA: Opening camera: $cameraName")
+        }
+
+        override fun onFirstFrameAvailable() {
+            println("BYOM_CAMERA: First frame available")
+        }
+
+        override fun onCameraClosed() {
+            println("BYOM_CAMERA: Camera closed")
+        }
+    }
+
     override suspend fun startCameraCapture(): PlatformVideoTrack? {
         val context = AndroidContextHolder.applicationContext ?: run {
             println("BYOM_CAMERA: No application context — skipping")
@@ -563,7 +624,7 @@ class AndroidWebRtcEngine : WebRtcEngine {
         val surfaceHelper = SurfaceTextureHelper.create("BYOMCaptureThread", WebRtc.rootEglBase.eglBaseContext)
         byomCameraSurfaceHelper = surfaceHelper
 
-        val capturer = org.webrtc.Camera2Capturer(context, cameraId, null)
+        val capturer = org.webrtc.Camera2Capturer(context, cameraId, byomCameraEventsHandler)
         capturer.initialize(surfaceHelper, context, source.capturerObserver)
         capturer.startCapture(BYOM_CAMERA_WIDTH, BYOM_CAMERA_HEIGHT, BYOM_CAMERA_FPS)
         byomCameraCapturer = capturer
@@ -608,12 +669,62 @@ class AndroidWebRtcEngine : WebRtcEngine {
             track.setEnabled(true)
             byomMicSource = source
             byomMicTrack = track
+            // Don't trust Android's default VOICE_COMMUNICATION routing: it
+            // follows the most-recently-attached USB input, so a webcam
+            // (Brio) re-enumerating behind the hub silently steals the mic
+            // route from the real mic array. Pin the capture explicitly and
+            // log every candidate so route theft shows up in logcat instead
+            // of requiring dumpsys archaeology.
+            context?.let { applyPreferredMicDevice(it) }
             println("BYOM_MIC: ✅ Microphone track created (id=$BYOM_MIC_TRACK_ID)")
             PlatformAudioTrack(track)
         } catch (error: Throwable) {
             println("BYOM_MIC: ❌ Failed to create microphone track: ${error.message}")
             stopMicrophoneCapture()
             null
+        }
+    }
+
+    private fun applyPreferredMicDevice(context: Context) {
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as android.media.AudioManager
+        val inputs = audioManager.getDevices(android.media.AudioManager.GET_DEVICES_INPUTS)
+        inputs.forEach { device ->
+            println(
+                "BYOM_MIC: input candidate id=${device.id} type=${device.type} " +
+                    "product='${device.productName}'"
+            )
+        }
+
+        fun nameOf(device: android.media.AudioDeviceInfo) =
+            device.productName?.toString()?.lowercase().orEmpty()
+
+        val webcamNames = listOf("brio", "webcam", "c920", "c925", "c930")
+        val usbType = android.media.AudioDeviceInfo.TYPE_USB_DEVICE
+
+        // Priority: the IFP's mic array (mvsilicon B1) → built-in mic →
+        // any USB input that isn't a known webcam. Null keeps OS routing.
+        val preferred = inputs.firstOrNull { device ->
+            device.type == usbType &&
+                (nameOf(device).contains("mvsilicon") || nameOf(device).contains("b1"))
+        }
+            ?: inputs.firstOrNull { it.type == android.media.AudioDeviceInfo.TYPE_BUILTIN_MIC }
+            ?: inputs.firstOrNull { device ->
+                device.type == usbType && webcamNames.none { nameOf(device).contains(it) }
+            }
+
+        if (preferred == null) {
+            println("BYOM_MIC: ⚠️ no preferred input matched — using OS default routing")
+            return
+        }
+        runCatching {
+            byomAudioDeviceModule?.setPreferredInputDevice(preferred)
+        }.onSuccess {
+            println(
+                "BYOM_MIC: ✅ capture pinned to '${preferred.productName}' " +
+                    "(id=${preferred.id}, type=${preferred.type})"
+            )
+        }.onFailure { error ->
+            println("BYOM_MIC: ⚠️ setPreferredInputDevice failed: ${error.message}")
         }
     }
 
@@ -1593,8 +1704,28 @@ private class NativeByomPeerConnection(
             println("BYOM_PC: ❌ Only native tracks can be added to a BYOM peer connection")
             return
         }
-        pc.addTrack(nativeTrack, listOf(BYOM_MEDIA_STREAM_ID))
+        val sender = pc.addTrack(nativeTrack, listOf(BYOM_MEDIA_STREAM_ID))
         println("BYOM_PC: ✅ Camera track added")
+        // Without explicit sender params libwebrtc's bandwidth estimator freely
+        // downscales the camera (320x180 observed in the field). A webcam feed
+        // must hold its resolution — degrade frame rate instead — and gets an
+        // explicit bitrate ceiling so it can climb back to 720p quality.
+        runCatching {
+            val params = sender.parameters
+            params.degradationPreference =
+                org.webrtc.RtpParameters.DegradationPreference.MAINTAIN_RESOLUTION
+            params.encodings.forEach { encoding ->
+                encoding.maxBitrateBps = BYOM_VIDEO_MAX_BITRATE_BPS
+                encoding.scaleResolutionDownBy = 1.0
+            }
+            sender.setParameters(params)
+            println(
+                "BYOM_PC: ✅ Encoder configured — maintain-resolution, " +
+                    "max ${BYOM_VIDEO_MAX_BITRATE_BPS / 1000} kbps"
+            )
+        }.onFailure {
+            println("BYOM_PC: ⚠️ Failed to set BYOM encoder params: ${it.message}")
+        }
     }
 
     override fun addLocalAudioTrack(track: PlatformAudioTrack) {
@@ -1640,6 +1771,10 @@ private class NativeByomPeerConnection(
 
     companion object {
         private const val BYOM_MEDIA_STREAM_ID = "byom_stream"
+
+        // Cap for the BYOM camera stream (1280x720@30 on a LAN). High enough
+        // for crisp 720p H.264/VP8, low enough not to starve screen-share.
+        private const val BYOM_VIDEO_MAX_BITRATE_BPS = 2_500_000
     }
 }
 
