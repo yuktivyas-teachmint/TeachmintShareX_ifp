@@ -89,10 +89,10 @@ android {
             keyPassword = "123456"
         }
         create("langoSigning") {
-            storeFile = file("teachmint1_platform.jks")
-            storePassword = "123456"
-            keyAlias = "teachmint"
-            keyPassword = "123456"
+            storeFile = file("mtk_edla.jks")
+            storePassword = "android"
+            keyAlias = "android"
+            keyPassword = "android"
         }
         create("cvteSigning") {
             storeFile = file("teachmint1_platform.jks")
@@ -178,4 +178,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.service)
     // Teachmint OTA update library (pulls in WorkManager, DataStore, OkHttp, Gson)
     implementation("com.teachmint.ota:ota:$otaVer")
+    // Vendor SDKs for reading the panel serial number (see DeviceSerialResolver):
+    // XbhSdk = Lango/XBH boards, client-sdk + binderhttpd = CVTE UDI service.
+    implementation(files("lib/XbhSdk.jar"))
+    implementation(files("lib/client-sdk-1.0.25.aar"))
+    implementation(files("lib/binderhttpd-0.0.17.aar"))
+    // UdiSdk hands back an OkHttpClient.Builder, so OkHttp must be on the compile classpath.
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }

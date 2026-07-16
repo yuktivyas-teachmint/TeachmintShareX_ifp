@@ -4,7 +4,12 @@ data class ShareXRemoteConfig(
     val enableDifferentWifiConnection: Boolean = true,
     val enableFileShareOnDifferentNetwork: Boolean = true,
     val enableOtaUpdates: Boolean = true,
-    /** JSON payload: {"version_number": "1.0.0", "apk_url": "https://..."} */
+    /**
+     * JSON payload: {"version_number": "1.0.0",
+     * "apk_urls": {"star": "https://...", "nonstar": ..., "lango": ..., "cvte": ...}}
+     * The flavor is chosen from the device serial (see OtaUpdateManager.detectDeviceFlavor);
+     * a flat legacy "apk_url" field is used as fallback.
+     */
     val otaUpdateJson: String = "",
 ) {
     companion object {

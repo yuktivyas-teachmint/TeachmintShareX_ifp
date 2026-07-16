@@ -12,8 +12,16 @@ import org.json.JSONObject
 /**
  * Drives OTA updates from the Firebase Remote Config key
  * [com.teachmint.sharex.remoteconfig.ShareXRemoteConfig.KEY_OTA_UPDATE]
- * (`{"version_number": "1.0.0", "apk_url": "https://..."}`) instead of the
- * OTA library's own backend polling (disabled in ShareXApplication).
+ * (`{"version_number": "1.0.0", "apk_urls": {"star": "https://...", ...}}`)
+ * instead of the OTA library's own backend polling (disabled in
+ * ShareXApplication).
+ *
+ * The flavor whose URL is downloaded comes from the device serial number, not
+ * from the build (see [detectDeviceFlavor]) — panels are sometimes flashed
+ * with the wrong flavor, and the serial is the ground truth for the hardware:
+ * `X2…` = star/nonstar (6th char `s` → star), `L0…` = lango, `C0…` = cvte.
+ * The legacy flat `apk_url` field is still honored as a fallback when
+ * `apk_urls` is missing or has no entry for this device.
  *
  * [checkForUpdate] refreshes remote config, and when the published version is
  * newer than the installed one hands the APK URL to [Ota.downloadFromUrl] —
@@ -41,8 +49,11 @@ object OtaUpdateManager {
         RemoteConfigManager.fetchAndActivate(minimumFetchIntervalSeconds = FETCH_MIN_INTERVAL_SECONDS)
 
         val payload = parsePayload(RemoteConfigManager.config.otaUpdateJson) ?: return
-        if (payload.apkUrl.isBlank()) {
-            Log.d(TAG, "ota_update has no apk_url, skipping")
+        val serial = DeviceSerialResolver.resolve(context)
+        val flavor = detectDeviceFlavor(serial)
+        val apkUrl = payload.urlFor(flavor)
+        if (apkUrl.isBlank()) {
+            Log.d(TAG, "ota_update has no apk url for flavor=$flavor (serial=$serial), skipping")
             return
         }
 
@@ -61,34 +72,68 @@ object OtaUpdateManager {
 
         Log.i(
             TAG,
-            "Update ${payload.versionNumber} available (installed $currentVersion), downloading ${payload.apkUrl}",
+            "Update ${payload.versionNumber} available for flavor=$flavor " +
+                "(installed $currentVersion, serial=$serial), downloading $apkUrl",
         )
         // Remember which version this download delivers: if the APK itself was
         // built with a stale versionName, this record is what stops us from
         // re-downloading the same update forever and what the settings screen
         // shows after the install (see InstalledVersionStore).
         InstalledVersionStore.onUpdateDownloadStarted(context, payload.versionNumber)
-        Ota.downloadFromUrl(payload.apkUrl)
+        Ota.downloadFromUrl(apkUrl)
     }
 
     internal data class OtaUpdatePayload(
         val versionNumber: String,
-        val apkUrl: String,
-    )
+        val apkUrls: Map<String, String>,
+        val legacyApkUrl: String,
+    ) {
+        fun urlFor(flavor: String?): String =
+            flavor?.let { apkUrls[it] }.orEmpty().ifBlank { legacyApkUrl }
+    }
 
     internal fun parsePayload(json: String): OtaUpdatePayload? {
         if (json.isBlank()) return null
         return try {
             val obj = JSONObject(json)
+            val urlsObj = obj.optJSONObject("apk_urls")
+            val apkUrls = buildMap {
+                urlsObj?.keys()?.forEach { key ->
+                    put(key.trim().lowercase(), urlsObj.optString(key).trim())
+                }
+            }
             OtaUpdatePayload(
                 versionNumber = obj.optString("version_number").trim(),
-                apkUrl = obj.optString("apk_url").trim(),
+                apkUrls = apkUrls,
+                legacyApkUrl = obj.optString("apk_url").trim(),
             )
         } catch (e: Exception) {
             Log.e(TAG, "Invalid ota_update payload: $json", e)
             null
         }
     }
+
+    /**
+     * Maps a panel's serial number to its APK flavor (all case-insensitive,
+     * and `0`/`O` are interchangeable in the second position):
+     * - `X2…` → star when the 6th character is `s`, otherwise nonstar
+     * - `L0…`/`LO…` → lango
+     * - `C0…`/`CO…` → cvte
+     * Returns null when the serial is missing or matches no known scheme.
+     */
+    internal fun detectDeviceFlavor(serial: String?): String? {
+        val s = serial?.trim()?.lowercase().orEmpty()
+        if (s.length < 2) return null
+        val zeroOrO = s[1] == '0' || s[1] == 'o'
+        return when {
+            s.startsWith("x2") ->
+                if (s.length >= 6 && s[5] == 's') "star" else "nonstar"
+            s[0] == 'l' && zeroOrO -> "lango"
+            s[0] == 'c' && zeroOrO -> "cvte"
+            else -> null
+        }
+    }
+
 
     private fun installedVersionName(context: Context): String {
         val packageVersion = runCatching {
