@@ -212,6 +212,22 @@ class AndroidWebRtcEngine : WebRtcEngine {
                         "BYOM_MIC HOST_SEND#$micCallbackCount: ${samples.sampleRate}Hz " +
                             "${samples.channelCount}ch peak=$micWindowPeak avg=$avg (max 32767)$silence"
                     )
+                    // Silent-capture failover: the SKG vendor bridge behind
+                    // "Built-In Mic" dies with no Android-visible error (record
+                    // stays active + unsilenced but yields digital zeros), so
+                    // level is the only truth. ~15s of zeros → re-pin capture
+                    // to the next input device, webcam mics as last resort.
+                    if (micCallbackCount >= 500L) {
+                        if (micWindowPeak < 30) {
+                            byomSilentWindows++
+                            if (byomSilentWindows >= 3) {
+                                byomSilentWindows = 0
+                                failoverMicDevice("capture silent for ~15s")
+                            }
+                        } else {
+                            byomSilentWindows = 0
+                        }
+                    }
                     micWindowPeak = 0; micWindowAbsSum = 0; micWindowSamples = 0
                 }
             }
@@ -651,6 +667,71 @@ class AndroidWebRtcEngine : WebRtcEngine {
     private var byomMicSource: AudioSource? = null
     private var byomMicTrack: AudioTrack? = null
 
+    /** AudioDeviceInfo.id the BYOM capture is currently pinned to (-1 = OS default). */
+    @Volatile private var byomCurrentMicId = -1
+
+    /** Consecutive ~5s windows of digital silence; only touched on the WebRTC audio thread. */
+    private var byomSilentWindows = 0
+
+    /**
+     * Re-pin the live BYOM AudioRecord to the next input device when the
+     * current one only yields zeros. Ranked: mvsilicon room mic → Built-In Mic
+     * (SKG vendor bridge) → non-webcam USB → webcam USB (e.g. Brio) as last
+     * resort — a webcam mic beats no audio at all when the vendor bridge is
+     * dead. AudioRecord.setPreferredDevice reroutes an active record, so this
+     * works mid-session without recreating the track. Cycling wraps around, so
+     * if every candidate is silent we keep probing until one produces signal.
+     */
+    private fun failoverMicDevice(reason: String) {
+        val context = AndroidContextHolder.applicationContext ?: return
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as android.media.AudioManager
+        val inputs = audioManager.getDevices(android.media.AudioManager.GET_DEVICES_INPUTS)
+
+        fun nameOf(device: android.media.AudioDeviceInfo) =
+            device.productName?.toString()?.lowercase().orEmpty()
+
+        val usbTypes = listOf(
+            android.media.AudioDeviceInfo.TYPE_USB_DEVICE,
+            android.media.AudioDeviceInfo.TYPE_USB_HEADSET,
+        )
+        val webcamNames = listOf("brio", "webcam", "c920", "c925", "c930")
+        val ranked = listOfNotNull(
+            inputs.firstOrNull { device ->
+                device.type in usbTypes &&
+                    (nameOf(device).contains("mvsilicon") || nameOf(device).contains("b1"))
+            },
+            inputs.firstOrNull { it.type == android.media.AudioDeviceInfo.TYPE_BUILTIN_MIC },
+            inputs.firstOrNull { device ->
+                device.type in usbTypes && webcamNames.none { nameOf(device).contains(it) }
+            },
+            inputs.firstOrNull { device ->
+                device.type in usbTypes && webcamNames.any { nameOf(device).contains(it) }
+            },
+        ).distinctBy { it.id }
+        if (ranked.size < 2 && ranked.firstOrNull()?.id == byomCurrentMicId) {
+            println("BYOM_MIC: ⚠️ $reason but no alternative input device to fail over to")
+            return
+        }
+        if (ranked.isEmpty()) {
+            println("BYOM_MIC: ⚠️ $reason but no input devices available")
+            return
+        }
+        val currentIdx = ranked.indexOfFirst { it.id == byomCurrentMicId }
+        val next = ranked[(currentIdx + 1) % ranked.size]
+        if (next.id == byomCurrentMicId) return
+        runCatching { byomAudioDeviceModule?.setPreferredInputDevice(next) }
+            .onSuccess {
+                byomCurrentMicId = next.id
+                println(
+                    "BYOM_MIC: 🔁 $reason — failing over capture to '${next.productName}' " +
+                        "(id=${next.id}, type=${next.type})"
+                )
+            }
+            .onFailure {
+                println("BYOM_MIC: ⚠️ failover setPreferredInputDevice failed: ${it.message}")
+            }
+    }
+
     override suspend fun startMicrophoneCapture(): PlatformAudioTrack? {
         val context = AndroidContextHolder.applicationContext
         if (context != null &&
@@ -714,11 +795,13 @@ class AndroidWebRtcEngine : WebRtcEngine {
 
         if (preferred == null) {
             println("BYOM_MIC: ⚠️ no preferred input matched — using OS default routing")
+            byomCurrentMicId = -1
             return
         }
         runCatching {
             byomAudioDeviceModule?.setPreferredInputDevice(preferred)
         }.onSuccess {
+            byomCurrentMicId = preferred.id
             println(
                 "BYOM_MIC: ✅ capture pinned to '${preferred.productName}' " +
                     "(id=${preferred.id}, type=${preferred.type})"
