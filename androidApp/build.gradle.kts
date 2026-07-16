@@ -95,10 +95,10 @@ android {
             keyPassword = "android"
         }
         create("cvteSigning") {
-            storeFile = file("teachmint1_platform.jks")
-            storePassword = "123456"
-            keyAlias = "teachmint"
-            keyPassword = "123456"
+            storeFile = file("teachmint.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
         }
     }
 
